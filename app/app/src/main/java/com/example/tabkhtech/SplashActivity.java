@@ -21,11 +21,13 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish(); // Close the SplashActivity
             }
         };
-        handler.postDelayed(runnable, 15000); // 3 seconds delay
+        handler.postDelayed(runnable, 5000); // 3 seconds delay
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

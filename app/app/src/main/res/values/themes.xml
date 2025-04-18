@@ -2,6 +2,11 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.TabkhTech" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/accentlight</item>
+
+        <item name="colorPrimaryVariant">@color/accentlight</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/lavender</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
