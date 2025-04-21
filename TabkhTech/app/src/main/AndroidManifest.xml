@@ -26,6 +26,17 @@
             android:exported="true">
 
         </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:exported="true">
+
+        </activity>
+        <activity
+            android:name=".random_meal.view.RandomMealViewImpl"
+            android:exported="true">
+
+        </activity>
+
     </application>
 
 </manifest>

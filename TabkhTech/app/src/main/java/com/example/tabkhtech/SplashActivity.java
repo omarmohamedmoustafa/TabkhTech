@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 public class SplashActivity extends AppCompatActivity {
 
     private Handler handler = new Handler();
@@ -19,18 +20,18 @@ public class SplashActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                Intent intent = new Intent(SplashActivity.this, SignUpActivity.class);
                 startActivity(intent);
                 finish(); // Close the SplashActivity
             }
         };
-        handler.postDelayed(runnable, 5000); // 3 seconds delay
+        handler.postDelayed(runnable, 5000);
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacks(runnable); // Remove the callback to prevent memory leaks
+        handler.removeCallbacks(runnable);
     }
 }
