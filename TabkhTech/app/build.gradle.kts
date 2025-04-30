@@ -46,6 +46,14 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.firebase.database)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+    implementation(libs.androidx.annotation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -83,5 +91,17 @@ dependencies {
     // https://firebase.google.com/docs/android/setup#available-libraries
 
     implementation("com.google.android.material:material:1.9.0")
+
+    implementation ("androidx.cardview:cardview:1.0.0")
+
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation ("androidx.fragment:fragment:1.5.7")
+    implementation ("androidx.recyclerview:recyclerview:1.3.2")
+    implementation ("androidx.core:core:1.9.0")
+    implementation ("com.google.android.material:material:1.9.0")
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+
+
 }
 

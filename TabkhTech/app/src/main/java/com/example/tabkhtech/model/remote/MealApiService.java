@@ -1,9 +1,8 @@
 package com.example.tabkhtech.model.remote;
 
-import com.example.tabkhtech.model.pojos.Categories;
-import com.example.tabkhtech.model.pojos.Countries;
-import com.example.tabkhtech.model.pojos.Ingredients;
-import com.example.tabkhtech.model.pojos.Meal;
+import com.example.tabkhtech.model.pojos.CategoryResponse;
+import com.example.tabkhtech.model.pojos.CountryResponse;
+import com.example.tabkhtech.model.pojos.IngredientResponse;
 import com.example.tabkhtech.model.pojos.MealResponse;
 
 import retrofit2.Call;
@@ -15,13 +14,13 @@ public interface MealApiService {
     Call<MealResponse> getRandomMeal();
 
     @GET("categories.php")
-    Call<Categories> getCategories();
+    Call<CategoryResponse> getAllCategories();
 
     @GET("list.php?a=list")
-    Call<Countries> getCountries();
+    Call<CountryResponse> getAllCountries();
 
     @GET("list.php?i=list")
-    Call<Ingredients> getIngredients();
+    Call<IngredientResponse> getAllIngredients();
 
     @GET("filter.php")
     Call<MealResponse> getMealsByCategory(@Query("c") String category);

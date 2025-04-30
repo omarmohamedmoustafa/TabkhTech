@@ -5,7 +5,9 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "meal_db")
+import java.util.ArrayList;
+import java.util.List;
+
 public class Meal {
     @PrimaryKey
     @NonNull
@@ -68,6 +70,58 @@ public class Meal {
     private String strMeasure19;
     private String strMeasure20;
 
+    public List<String> getIngredients() {
+        List<String> ingredients = new ArrayList<>();
+        String[] ingredientFields = {
+                strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
+                strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10,
+                strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15,
+                strIngredient16, strIngredient17, strIngredient18, strIngredient19, strIngredient20
+        };
+        for (String ingredient : ingredientFields) {
+            if (ingredient != null && !ingredient.trim().isEmpty()) {
+                ingredients.add(ingredient);
+            }
+        }
+        return ingredients;
+    }
+    public List<String> getMeasures() {
+        List<String> measures = new ArrayList<>();
+        String[] measureFields = {
+                strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5,
+                strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10,
+                strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15,
+                strMeasure16, strMeasure17, strMeasure18, strMeasure19, strMeasure20
+        };
+        for (String measure : measureFields) {
+            if (measure != null && !measure.trim().isEmpty()) {
+                measures.add(measure);
+            }
+        }
+        return measures;
+    }
+    public void setIngredients(List<String> ingredients) {
+        String[] ingredientFields = {
+                strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
+                strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10,
+                strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15,
+                strIngredient16, strIngredient17, strIngredient18, strIngredient19, strIngredient20
+        };
+        for (int i = 0; i < ingredients.size() && i < ingredientFields.length; i++) {
+            ingredientFields[i] = ingredients.get(i);
+        }
+    }
+    public void setMeasures(List<String> measures) {
+        String[] measureFields = {
+                strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5,
+                strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10,
+                strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15,
+                strMeasure16, strMeasure17, strMeasure18, strMeasure19, strMeasure20
+        };
+        for (int i = 0; i < measures.size() && i < measureFields.length; i++) {
+            measureFields[i] = measures.get(i);
+        }
+    }
     public String getIdMeal() {
         return idMeal;
     }
@@ -495,13 +549,13 @@ public class Meal {
     public Meal() {
     }
 
-    public Meal(String idMeal, String strMeal, String strMealAlternate, String strCategory, String strArea, String strInstructions, String strMealThumb, String strTags, String strYoutube, String strSource, String strImageSource, String strCreativeCommonsConfirmed, String dateModified, String strIngredient1, String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5, String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9, String strIngredient10, String strIngredient11, String strIngredient12, String strIngredient13, String strIngredient14, String strIngredient15, String strIngredient16, String strIngredient17, String strIngredient18, String strIngredient19, String strIngredient20, String strMeasure1, String strMeasure2, String strMeasure3, String strMeasure4, String strMeasure5, String strMeasure6, String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10, String strMeasure11, String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15, String strMeasure16, String strMeasure17, String strMeasure18, String strMeasure19, String strMeasure20) {
+    public Meal(String strInstructions, @NonNull String idMeal, String strMeal, String strMealAlternate, String strCategory, String strArea, String strMealThumb, String strTags, String strYoutube, String strSource, String strImageSource, String strCreativeCommonsConfirmed, String dateModified, String strIngredient1, String strIngredient2, String strIngredient3, String strIngredient4, String strIngredient5, String strIngredient6, String strIngredient7, String strIngredient8, String strIngredient9, String strIngredient10, String strIngredient11, String strIngredient12, String strIngredient13, String strIngredient14, String strIngredient15, String strIngredient16, String strIngredient17, String strIngredient18, String strIngredient19, String strIngredient20, String strMeasure1, String strMeasure2, String strMeasure3, String strMeasure4, String strMeasure5, String strMeasure6, String strMeasure7, String strMeasure8, String strMeasure9, String strMeasure10, String strMeasure11, String strMeasure12, String strMeasure13, String strMeasure14, String strMeasure15, String strMeasure16, String strMeasure17, String strMeasure18, String strMeasure19, String strMeasure20) {
+        this.strInstructions = strInstructions;
         this.idMeal = idMeal;
         this.strMeal = strMeal;
         this.strMealAlternate = strMealAlternate;
         this.strCategory = strCategory;
         this.strArea = strArea;
-        this.strInstructions = strInstructions;
         this.strMealThumb = strMealThumb;
         this.strTags = strTags;
         this.strYoutube = strYoutube;

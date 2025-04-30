@@ -1,0 +1,55 @@
+package com.example.tabkhtech.ui.home.presenter;
+
+
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+
+import com.example.tabkhtech.model.pojos.RecentMeal;
+import com.example.tabkhtech.model.remote.MealNetworkCallback;
+import com.example.tabkhtech.model.remote.SingleMealNetworkCallback;
+import com.example.tabkhtech.ui.home.view.HomeView;
+import com.example.tabkhtech.model.pojos.Meal;
+import com.example.tabkhtech.model.repository.Repository;
+
+import java.util.List;
+
+public class HomePresenterImpl implements HomePresenter, MealNetworkCallback, SingleMealNetworkCallback {
+    Repository repository;
+    HomeView view;
+
+    public HomePresenterImpl(Repository repository, HomeView view) {
+        this.repository = repository;
+        this.view = view;
+    }
+
+    @Override
+    public void getRandomMeal() {
+        repository.getRandomMeal(this);
+        Log.d("TAG", "getRandomMeal: ");
+    }
+
+    @Override
+    public LiveData<List<RecentMeal>> getRecentlyViewedMeals(int limit) {
+        return repository.getAllRecentMeals(5);
+    }
+
+    @Override
+    public void onSuccess(List<Meal> meals) {
+
+    }
+
+    @Override
+    public void onSingleMealSuccess(Meal meal) {
+        if (meal != null) {
+            view.showRandomMeal(meal);
+        } else {
+        }
+    }
+
+    @Override
+    public void onFailure(String errorMessage) {
+        Log.e("RandomMealPresenter", "Error fetching random meal: " + errorMessage);
+        view.showError(errorMessage);
+    }
+}
