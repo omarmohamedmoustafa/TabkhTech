@@ -1,5 +1,7 @@
 package com.example.tabkhtech.ui.single_meal.view;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -7,6 +9,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +26,18 @@ import com.example.tabkhtech.model.local.MealLocalDataSourceImpl;
 import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
+import com.example.tabkhtech.model.pojos.SchedMeal;
 import com.example.tabkhtech.model.remote.MealRemoteDataSourceImpl;
 import com.example.tabkhtech.model.repository.RepositoryImpl;
 import com.example.tabkhtech.ui.single_meal.presenter.SingleMealPresenter;
 import com.example.tabkhtech.ui.single_meal.presenter.SingleMealPresenterImpl;
+import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class mealFragment extends Fragment implements SingleMealView {
 
@@ -43,10 +53,16 @@ public class mealFragment extends Fragment implements SingleMealView {
     RecyclerView rv;
     List<String> ingredients;
     List<String> measures;
+    ImageButton calendarButton;
+    private SharedPreferences sharedPreferences;
+    private String userId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Initialize SharedPreferences
+        sharedPreferences = requireContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", "guest"); // Default to "guest" if not found
         presenter = new SingleMealPresenterImpl(
                 RepositoryImpl.getInstance(
                         MealLocalDataSourceImpl.getInstance(this.getContext()),
@@ -58,6 +74,7 @@ public class mealFragment extends Fragment implements SingleMealView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("mealFragment", "onCreateView called");
         return inflater.inflate(R.layout.fragment_meal, container, false);
     }
 
@@ -72,6 +89,7 @@ public class mealFragment extends Fragment implements SingleMealView {
         favoriteButton = view.findViewById(R.id.favorite_button);
         webView = view.findViewById(R.id.webView);
         rv = view.findViewById(R.id.ingredientsRV);
+        calendarButton = view.findViewById(R.id.calendar_button);
 
         rv.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
@@ -88,9 +106,14 @@ public class mealFragment extends Fragment implements SingleMealView {
 
             ingredients = bundle.getStringArrayList("ingredients");
             measures = bundle.getStringArrayList("measures");
+            meal.setIngredients(ingredients);
+            meal.setMeasures(measures);
 
             boolean fromFavorites = bundle.getBoolean("fromFavorites", false);
             showMeal(meal, fromFavorites);
+        } else {
+            Log.e("mealFragment", "No arguments received");
+            Toast.makeText(getContext(), "No meal data provided", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -100,69 +123,117 @@ public class mealFragment extends Fragment implements SingleMealView {
     }
 
     private void showMeal(Meal meal, boolean fromFavorites) {
-        currentMeal = meal;
-        mealName.setText(meal.getStrMeal());
-        mealCategory.setText(meal.getStrCategory());
-        mealArea.setText(meal.getStrArea());
-        mealInstructions.setText(meal.getStrInstructions());
-        if (meal.getStrMealThumb() != null) {
-            Glide.with(this)
-                    .load(meal.getStrMealThumb())
-                    .into(mealImage);
-        }
-        if (meal.getStrYoutube() != null && meal.getStrYoutube().contains("youtube.com/watch?v=")) {
-            String embedUrl = meal.getStrYoutube().replace("watch?v=", "embed/");
-            String video = "<iframe width=\"100%\" height=\"100%\" src=\"" + embedUrl +
-                    "\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.setWebChromeClient(new WebChromeClient());
-            webView.loadDataWithBaseURL(null, video, "text/html", "utf-8", null);
-        } else {
-            webView.setVisibility(View.GONE);
-        }
+        try {
+            currentMeal = meal;
+            Log.d("mealFragment", "showMeal: " + meal.getStrMeal());
 
-        // Populate the RecyclerView with ingredients and measures
-        if (ingredients != null && measures != null && !ingredients.isEmpty()) {
-            rv.setVisibility(View.VISIBLE);
-            MealIngredientsAdapter adapter = new MealIngredientsAdapter(ingredients, measures);
-            rv.setAdapter(adapter);
-        } else {
-            rv.setVisibility(View.GONE);
-        }
-
-        RecentMeal recentMeal = new RecentMeal(meal);
-        presenter.insertRecentMeal(recentMeal);
-
-        favoriteButton.setSelected(fromFavorites);
-        LiveData<FavMeal> favMealLiveData = ((SingleMealPresenterImpl) presenter).getFavMealById(meal.getIdMeal());
-        favMealLiveData.observe(getViewLifecycleOwner(), favMeal -> {
-            boolean isFavorite = favMeal != null;
-            favoriteButton.setSelected(isFavorite);
-        });
-
-        favoriteButton.setOnClickListener(v -> {
-            boolean newState = !favoriteButton.isSelected();
-            favoriteButton.setSelected(newState);
-            FavMeal favMeal = new FavMeal();
-            favMeal.setIdMeal(meal.getIdMeal());
-            favMeal.setStrMeal(meal.getStrMeal());
-            favMeal.setStrMealThumb(meal.getStrMealThumb());
-            favMeal.setStrCategory(meal.getStrCategory());
-            favMeal.setStrArea(meal.getStrArea());
-            favMeal.setStrInstructions(meal.getStrInstructions());
-            favMeal.setStrYoutube(meal.getStrYoutube());
-            favMeal.setIngredients(meal.getIngredients());
-            favMeal.setMeasures(meal.getMeasures());
-            if (newState) {
-                presenter.addToFavorites(favMeal);
-            } else {
-                presenter.removeFromFavorites(favMeal);
+            mealName.setText(meal.getStrMeal());
+            mealCategory.setText(meal.getStrCategory());
+            mealArea.setText(meal.getStrArea());
+            mealInstructions.setText(meal.getStrInstructions());
+            if (meal.getStrMealThumb() != null) {
+                Glide.with(this)
+                        .load(meal.getStrMealThumb())
+                        .into(mealImage);
             }
-        });
+            if (meal.getStrYoutube() != null && meal.getStrYoutube().contains("youtube.com/watch?v=")) {
+                String embedUrl = meal.getStrYoutube().replace("watch?v=", "embed/");
+                String video = "<iframe width=\"100%\" height=\"100%\" src=\"" + embedUrl +
+                        "\" title=\"YouTube video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.setWebChromeClient(new WebChromeClient());
+                webView.loadDataWithBaseURL(null, video, "text/html", "utf-8", null);
+            } else {
+                webView.setVisibility(View.GONE);
+            }
+
+            if (ingredients != null && measures != null && !ingredients.isEmpty()) {
+                for (int i = 0; i < ingredients.size(); i++) {
+                    if (ingredients.get(i) == null || ingredients.get(i).isEmpty()) {
+                        ingredients.remove(i);
+                        measures.remove(i);
+                        i--;
+                    }
+                }
+                rv.setVisibility(View.VISIBLE);
+                MealIngredientsAdapter adapter = new MealIngredientsAdapter(ingredients, measures);
+                rv.setAdapter(adapter);
+            } else {
+                rv.setVisibility(View.GONE);
+            }
+
+            RecentMeal recentMeal = new RecentMeal(meal, userId);
+            presenter.insertRecentMeal(recentMeal);
+
+            favoriteButton.setSelected(fromFavorites);
+            LiveData<FavMeal> favMealLiveData = ((SingleMealPresenterImpl) presenter).getFavMealById(meal.getIdMeal(), userId);
+            favMealLiveData.observe(getViewLifecycleOwner(), favMeal -> {
+                boolean isFavorite = favMeal != null;
+                favoriteButton.setSelected(isFavorite);
+            });
+
+            favoriteButton.setOnClickListener(v -> {
+                boolean newState = !favoriteButton.isSelected();
+                favoriteButton.setSelected(newState);
+                FavMeal favMeal = new FavMeal(currentMeal, userId);
+                if (newState) {
+                    presenter.insertFavMeal(favMeal);
+                    Toast.makeText(getContext(), "Added to favorites", Toast.LENGTH_SHORT).show();
+                } else {
+                    presenter.deleteFavMeal(favMeal);
+                    Toast.makeText(getContext(), "Removed from favorites", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            calendarButton.setOnClickListener(v -> {
+                Calendar today = Calendar.getInstance();
+                long todayMillis = today.getTimeInMillis();
+
+                Calendar endDate = Calendar.getInstance();
+                endDate.add(Calendar.DAY_OF_MONTH, 7);
+                long endDateMillis = endDate.getTimeInMillis();
+
+                CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder()
+                        .setStart(todayMillis)
+                        .setEnd(endDateMillis);
+
+                MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                        .setTitleText("Schedule Meal (Next 7 Days)")
+                        .setSelection(todayMillis)
+                        .setCalendarConstraints(constraintsBuilder.build())
+                        .build();
+
+                datePicker.show(getParentFragmentManager(), "DATE_PICKER");
+
+                datePicker.addOnPositiveButtonClickListener(selection -> {
+                    if (selection >= todayMillis && selection <= endDateMillis) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        String selectedDate = dateFormat.format(selection);
+                        Log.d("mealFragment", "Scheduled meal for date: " + selectedDate);
+
+                        SchedMeal schedMeal = new SchedMeal(currentMeal, selectedDate, userId);
+                        presenter.insertSchedMeal(schedMeal);
+
+                        Toast.makeText(getContext(), "Meal scheduled for " + selectedDate, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Log.w("mealFragment", "Invalid date selected: " + selection);
+                        Toast.makeText(getContext(), "Please select a date within the next 7 days", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            });
+        } catch (Exception e) {
+            Log.e("mealFragment", "Error in showMeal", e);
+            Toast.makeText(getContext(), "Error displaying meal: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     public void showError(String errorMessage) {
         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
     }
 }

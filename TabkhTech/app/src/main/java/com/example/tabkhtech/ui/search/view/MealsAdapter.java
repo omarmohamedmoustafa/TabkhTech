@@ -31,7 +31,7 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.search_meal_item, parent, false);
+                .inflate(R.layout.item_card, parent, false);
         return new ViewHolder(view);
     }
 
@@ -78,8 +78,8 @@ public class MealsAdapter extends RecyclerView.Adapter<MealsAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.mealImg);
-            title = itemView.findViewById(R.id.mealName);
+            image = itemView.findViewById(R.id.itemImg);
+            title = itemView.findViewById(R.id.itemName);
             if (title == null) {
                 throw new IllegalStateException("TextView with ID mealName not found in search_item.xml");
             }

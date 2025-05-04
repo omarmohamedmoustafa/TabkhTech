@@ -1,4 +1,4 @@
-package com.example.tabkhtech.ui.splash;
+package com.example.tabkhtech;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.tabkhtech.R;
-import com.example.tabkhtech.SignUpActivity;
+import com.example.tabkhtech.authentication.signup.view.SignUpActivity;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -25,10 +24,10 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent intent = new Intent(SplashActivity.this, SignUpActivity.class);
                 startActivity(intent);
-                finish(); // Close the SplashActivity
+                finish();
             }
         };
-        handler.postDelayed(runnable, 5000);
+        handler.postDelayed(runnable, 7000);
 
     }
 

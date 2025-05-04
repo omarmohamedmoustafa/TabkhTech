@@ -7,5 +7,8 @@
     <style name="Theme.TabkhTech" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="android:fontFamily">@font/barlow</item>
         <item name="fontFamily">@font/barlow</item>
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
     </style>
 </resources>

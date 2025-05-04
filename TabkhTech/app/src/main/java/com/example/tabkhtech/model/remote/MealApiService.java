@@ -33,5 +33,4 @@ public interface MealApiService {
 
     @GET("lookup.php")
     Call<MealResponse> getMealById(@Query("i") String id);
-
 }

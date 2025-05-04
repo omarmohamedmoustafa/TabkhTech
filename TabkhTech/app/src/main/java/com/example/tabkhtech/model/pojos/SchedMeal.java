@@ -1,16 +1,19 @@
 package com.example.tabkhtech.model.pojos;
 
-
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 
-@Entity(tableName = "sched_meals")
-public class SchedMeal extends Meal{
+@Entity(tableName = "sched_meals", primaryKeys = {"idMeal", "userId"})
+public class SchedMeal extends Meal {
     private String scheduledDate;
+    @NonNull
+    private String userId; // New field to associate meal with user
 
     public SchedMeal() {
         super();
     }
-    public SchedMeal(Meal meal){
+
+    public SchedMeal(Meal meal, String userId, String scheduledDate) {
         this.setIdMeal(meal.getIdMeal());
         this.setStrMeal(meal.getStrMeal());
         this.setStrMealThumb(meal.getStrMealThumb());
@@ -43,13 +46,23 @@ public class SchedMeal extends Meal{
         this.setStrIngredient18(meal.getStrIngredient18());
         this.setStrIngredient19(meal.getStrIngredient19());
         this.setStrIngredient20(meal.getStrIngredient20());
-        this.setScheduledDate("2024-10-13");
+        this.scheduledDate = scheduledDate;
+        this.userId = userId;
     }
 
     public String getScheduledDate() {
         return scheduledDate;
     }
+
     public void setScheduledDate(String scheduledDate) {
         this.scheduledDate = scheduledDate;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

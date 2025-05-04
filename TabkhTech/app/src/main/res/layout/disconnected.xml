@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Cloud Icon with Lightning Bolt -->
+    <ImageView
+        android:id="@+id/cloud_icon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="150dp"
+        android:src="@drawable/ic_cloud_lightning"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/oops_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Oops!"
+        android:textSize="40sp"
+        android:textColor="#333333"
+        android:textStyle="bold"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/cloud_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- "No Internet Connection found" Text -->
+    <TextView
+        android:id="@+id/no_internet_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Internet Connection found"
+        android:textSize="26sp"
+        android:textColor="#666666"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/oops_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- "Check your connection" Text -->
+    <TextView
+        android:id="@+id/check_connection_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Check your connection"
+        android:textSize="26sp"
+        android:textColor="#666666"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toBottomOf="@id/no_internet_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

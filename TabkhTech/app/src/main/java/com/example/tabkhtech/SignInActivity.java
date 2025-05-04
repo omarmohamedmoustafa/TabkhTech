@@ -1,30 +1,42 @@
 package com.example.tabkhtech;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 
+import com.example.tabkhtech.authentication.signup.view.SignUpActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SignInActivity extends AppCompatActivity {
 
     EditText loginEmail, loginPassword;
     Button loginButton;
-    Button signupRedirectText;
+    TextView signupRedirectText;
     FirebaseAuth mAuth;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_in); // Make sure the XML file is named correctly
+
+        // Check if user is already logged in
+        sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
+        boolean isSignedIn = sharedPreferences.getBoolean("isSignedIn", false);
+        boolean isGuest = sharedPreferences.getBoolean("isGuest", false);
+
+        if (isSignedIn || isGuest) {
+            redirectToMainActivity();
+            return;
+        }
+
+        setContentView(R.layout.activity_sign_in);
 
         loginEmail = findViewById(R.id.loginEmail);
         loginPassword = findViewById(R.id.loginPassword);
@@ -44,10 +56,14 @@ public class SignInActivity extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
+                            // Save login state
+                            sharedPreferences.edit()
+                                    .putBoolean("isSignedIn", true)
+                                    .putBoolean("isGuest", false)
+                                    .apply();
+
                             Toast.makeText(SignInActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
+                            redirectToMainActivity();
                         } else {
                             Toast.makeText(SignInActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -59,5 +75,17 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+
+    private void redirectToMainActivity() {
+        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

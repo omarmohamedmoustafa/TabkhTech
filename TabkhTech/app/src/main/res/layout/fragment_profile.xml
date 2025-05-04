@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/light_gray"
     android:padding="16dp"
     android:clipToPadding="false">
 
@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Profile Header Section -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="24dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -33,12 +34,13 @@
 
                     <ImageView
                         android:id="@+id/userImage"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/ic_profile_placeholder"
                         android:scaleType="centerCrop"
-                        android:background="@drawable/circle_background" />
+                        android:background="@drawable/circle_background"
+                        app:cardElevation="2dp" />
 
                 </RelativeLayout>
 
@@ -48,82 +50,20 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
-                    android:text="Alex Carter"
-                    android:textColor="#2E2E2E"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#FFF8E1">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Favorite Recipes"
-                    android:textColor="#F57C00"
-                    android:textSize="18sp"
+                    android:textColor="#212121"
+                    android:textSize="26sp"
+                    android:fontFamily="sans-serif-medium"
                     android:textStyle="bold" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
-
-                    <ImageView
-                        android:id="@+id/recipe1"
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/ic_recipe_placeholder"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/rounded_image_background" />
-
-                    <!-- Recipe 2 -->
-                    <ImageView
-                        android:id="@+id/recipe2"
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/ic_recipe_placeholder"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/rounded_image_background" />
-
-                    <!-- Recipe 3 -->
-                    <ImageView
-                        android:id="@+id/recipe3"
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_weight="1"
-                        android:src="@drawable/ic_recipe_placeholder"
-                        android:scaleType="centerCrop"
-                        android:background="@drawable/rounded_image_background" />
-                </LinearLayout>
-
                 <TextView
-                    android:id="@+id/view_all_recipes"
+                    android:id="@+id/userEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
+                    android:layout_gravity="center"
                     android:layout_marginTop="8dp"
-                    android:text="View All"
-                    android:textColor="#F57C00"
-                    android:textSize="14sp" />
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:fontFamily="sans-serif" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -134,27 +74,28 @@
             android:layout_marginTop="16dp"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
-            app:cardBackgroundColor="#E8F5E9">
+            app:cardBackgroundColor="#FFF1F0">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Meal Planning Stats"
-                    android:textColor="#388E3C"
-                    android:textSize="18sp"
+                    android:textColor="#D32F2F"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-medium"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="12dp">
 
                     <!-- Stat 1 -->
                     <LinearLayout
@@ -165,20 +106,21 @@
                         android:gravity="center">
 
                         <TextView
+                            android:id="@+id/mealsPlanned"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/mealsPlanned"
-                            android:text="12"
-                            android:textColor="#2E2E2E"
-                            android:textSize="20sp"
+                            android:textColor="#212121"
+                            android:textSize="24sp"
+                            android:fontFamily="sans-serif-medium"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Meals Planned"
-                            android:textColor="#666666"
-                            android:textSize="12sp" />
+                            android:textColor="#757575"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif" />
                     </LinearLayout>
 
                     <!-- Stat 2 -->
@@ -190,22 +132,95 @@
                         android:gravity="center">
 
                         <TextView
+                            android:id="@+id/recipesSaved"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="8"
-                            android:id="@+id/recipesSaved"
-                            android:textColor="#2E2E2E"
-                            android:textSize="20sp"
+                            android:textColor="#212121"
+                            android:textSize="24sp"
+                            android:fontFamily="sans-serif-medium"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Recipes Saved"
-                            android:textColor="#666666"
-                            android:textSize="12sp" />
+                            android:textColor="#757575"
+                            android:textSize="14sp"
+                            android:fontFamily="sans-serif" />
                     </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Account Settings Section -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Account Settings"
+                    android:textColor="#D32F2F"
+                    android:textSize="20sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="bold" />
+
+                <!-- Update Password Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/updatePasswordButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Update Password"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="#D32F2F"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="#D32F2F"
+                    app:strokeWidth="1dp"
+                    android:padding="12dp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <!-- Sign Up Button (for guests) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/signUpButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Sign Up"
+                    android:textColor="#FFFFFF"
+                    app:backgroundTint="#4CAF50"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="#4CAF50"
+                    app:strokeWidth="1dp"
+                    android:padding="12dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:visibility="gone" />
+
+                <!-- Sign Out Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/signOutButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Sign Out"
+                    android:textColor="#D32F2F"
+                    app:backgroundTint="#FFFFFF"
+                    app:cornerRadius="8dp"
+                    app:strokeColor="#D32F2F"
+                    app:strokeWidth="1dp"
+                    android:padding="12dp"
+                    android:fontFamily="sans-serif-medium" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </LinearLayout>

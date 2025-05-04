@@ -1,6 +1,13 @@
 package com.example.tabkhtech.ui.search.view;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.net.NetworkRequest;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +53,10 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
     private MealsAdapter mealsAdapter;
     private SearchView searchBar;
     private View rootView;
+    private ConnectivityManager connectivityManager;
+    private boolean isConnected;
+    private ConnectivityManager.NetworkCallback networkCallback;
+
 
     private String currentSearchType = "categories";
     private String previousSearchType = "categories";
@@ -54,89 +65,122 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
     private List<Ingredient> allIngredients = new ArrayList<>();
     private List<Meal> allMeals = new ArrayList<>();
 
+    public boolean isInternetConnected(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager == null) {
+            return false;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Network network = connectivityManager.getActiveNetwork();
+            if (network == null) {
+                return false;
+            }
+            NetworkCapabilities capabilities = connectivityManager.getNetworkCapabilities(network);
+            return capabilities != null &&
+                    (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
+        } else {
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            return networkInfo != null && networkInfo.isConnected();
+        }
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new SearchPresenterImpl(this,
-                RepositoryImpl.getInstance(
-                        MealLocalDataSourceImpl.getInstance(requireContext()),
-                        MealRemoteDataSourceImpl.getInstance())
-        );
-        presenter.getAllCategories();
+        // Initialize connectivity manager
+        connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        isConnected = isInternetConnected(getContext());
+        if(isConnected){
+            presenter = new SearchPresenterImpl(this,
+                    RepositoryImpl.getInstance(
+                            MealLocalDataSourceImpl.getInstance(requireContext()),
+                            MealRemoteDataSourceImpl.getInstance())
+            );
+            presenter.getAllCategories();
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        if (isConnected)
+            rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        else
+            rootView = inflater.inflate(R.layout.disconnected, container, false);
         return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        searchByCategory = rootView.findViewById(R.id.btnCategories);
-        searchByCountry = rootView.findViewById(R.id.btnCountries);
-        searchByIngredient = rootView.findViewById(R.id.btnIngredients);
-        setActiveButton(searchByCategory);
-
-        searchBar = rootView.findViewById(R.id.searchView);
-        searchBar.clearFocus();
-        searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterData(newText);
-                return true;
-            }
-        });
-        searchBar.setOnCloseListener(() -> {
-            switch (currentSearchType) {
-                case "categories":
-                    presenter.getAllCategories();
-                    break;
-                case "countries":
-                    presenter.getAllCountries();
-                    break;
-                case "ingredients":
-                    presenter.getAllIngredients();
-                    break;
-                case "meals":
-                    showMeals(allMeals);
-                    break;
-            }
-            return false;
-        });
-
-        rv = rootView.findViewById(R.id.searchRV);
-        layoutManager = new LinearLayoutManager(requireContext());
-        rv.setLayoutManager(layoutManager);
-        categoriesAdapter = new CategoriesAdapter(new ArrayList<>(), this);
-        rv.setAdapter(categoriesAdapter);
-
-        searchByCategory.setOnClickListener(v -> {
-            currentSearchType = "categories";
-            previousSearchType = "categories";
+        if(isConnected) {
+            searchByCategory = rootView.findViewById(R.id.btnCategories);
+            searchByCountry = rootView.findViewById(R.id.btnCountries);
+            searchByIngredient = rootView.findViewById(R.id.btnIngredients);
             setActiveButton(searchByCategory);
-            presenter.getAllCategories();
-        });
-        searchByCountry.setOnClickListener(v -> {
-            currentSearchType = "countries";
-            previousSearchType = "countries";
-            setActiveButton(searchByCountry);
-            presenter.getAllCountries();
-        });
-        searchByIngredient.setOnClickListener(v -> {
-            currentSearchType = "ingredients";
-            previousSearchType = "ingredients";
-            setActiveButton(searchByIngredient);
-            presenter.getAllIngredients();
-        });
+
+            searchBar = rootView.findViewById(R.id.searchView);
+            searchBar.clearFocus();
+            searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    filterData(newText);
+                    return true;
+                }
+            });
+            searchBar.setOnCloseListener(() -> {
+                switch (currentSearchType) {
+                    case "categories":
+                        presenter.getAllCategories();
+                        break;
+                    case "countries":
+                        presenter.getAllCountries();
+                        break;
+                    case "ingredients":
+                        presenter.getAllIngredients();
+                        break;
+                    case "meals":
+                        showMeals(allMeals);
+                        break;
+                }
+                return false;
+            });
+
+            rv = rootView.findViewById(R.id.searchRV);
+            layoutManager = new LinearLayoutManager(requireContext());
+            rv.setLayoutManager(layoutManager);
+            categoriesAdapter = new CategoriesAdapter(new ArrayList<>(), this);
+            rv.setAdapter(categoriesAdapter);
+
+            searchByCategory.setOnClickListener(v -> {
+                currentSearchType = "categories";
+                previousSearchType = "categories";
+                setActiveButton(searchByCategory);
+                presenter.getAllCategories();
+            });
+            searchByCountry.setOnClickListener(v -> {
+                currentSearchType = "countries";
+                previousSearchType = "countries";
+                setActiveButton(searchByCountry);
+                presenter.getAllCountries();
+            });
+            searchByIngredient.setOnClickListener(v -> {
+                currentSearchType = "ingredients";
+                previousSearchType = "ingredients";
+                setActiveButton(searchByIngredient);
+                presenter.getAllIngredients();
+            });
+        }
+        setupNetworkCallback();
     }
 
     private void filterData(String query) {
@@ -242,8 +286,7 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
         searchByCategory.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_gray)));
         searchByCountry.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_gray)));
         searchByIngredient.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_gray)));
-        activeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue)));
-        activeButton.setTextColor(getResources().getColor(R.color.white));
+        activeButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.light_red)));
     }
 
     @Override
@@ -314,7 +357,7 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
 
     public void addRecentMeal(Meal meal) {
         long currentTime = System.currentTimeMillis();
-        RecentMeal recentMeal = new RecentMeal(meal);
+        RecentMeal recentMeal = new RecentMeal(meal, "1");
         recentMeal.setLastOpened(currentTime);
         presenter.insertRecentMeal(recentMeal);
     }
@@ -368,6 +411,48 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
         }
         return false;
     }
+    private void setupNetworkCallback() {
+        networkCallback = new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@NonNull Network network) {
+                requireActivity().runOnUiThread(() -> {
+                    if (!isConnected) {
+                        isConnected = true;
+                        reloadFragment();
+                    }
+                });
+            }
 
+            @Override
+            public void onLost(@NonNull Network network) {
+                requireActivity().runOnUiThread(() -> {
+                    if (isConnected) {
+                        isConnected = false;
+                        reloadFragment();
+                    }
+                });
+            }
+        };
+
+        NetworkRequest networkRequest = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (connectivityManager != null && networkCallback != null) {
+            connectivityManager.unregisterNetworkCallback(networkCallback);
+        }
+    }
+    private void reloadFragment() {
+        if (isAdded() && getActivity() != null) {
+            getParentFragmentManager().beginTransaction()
+                    .detach(this)
+                    .attach(this)
+                    .commit();
+        }
+    }
 
 }

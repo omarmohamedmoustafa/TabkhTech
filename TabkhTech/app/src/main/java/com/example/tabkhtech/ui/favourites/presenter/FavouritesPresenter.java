@@ -6,6 +6,7 @@ import com.example.tabkhtech.model.pojos.FavMeal;
 
 import java.util.List;
 
+
 public interface FavouritesPresenter {
-    LiveData<List<FavMeal>> getFavouriteMeals();
+    LiveData<List<FavMeal>> getAllFavMeals(String userId);
 }

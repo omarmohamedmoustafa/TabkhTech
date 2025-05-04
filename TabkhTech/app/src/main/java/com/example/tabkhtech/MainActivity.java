@@ -1,15 +1,16 @@
 package com.example.tabkhtech;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.tabkhtech.ui.calendar.view.CalendarViewImpl;
 import com.example.tabkhtech.ui.favourites.view.FavouritesFragment;
 import com.example.tabkhtech.ui.home.view.HomeViewImpl;
+import com.example.tabkhtech.ui.profile.view.ProfileFragment;
 import com.example.tabkhtech.ui.search.view.SearchViewImpl;
-import com.example.tabkhtech.ui.single_meal.view.mealFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.color.DynamicColors;
 
@@ -22,9 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         DynamicColors.applyToActivitiesIfAvailable(getApplication());
-        // Initialize views
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        // Set smaller icon size programmatically
 
         // Set default fragment
         if (savedInstanceState == null) {
@@ -48,11 +47,11 @@ public class MainActivity extends AppCompatActivity {
                  selectedFragment = new FavouritesFragment();
                  tag = "favourites";
             } else if (itemId == R.id.calendar) {
-//                 selectedFragment = new CalendarFragment();
-                // tag = "calendar";
+                 selectedFragment = new CalendarViewImpl();
+                 tag = "calendar";
             } else if (itemId == R.id.profile) {
                  selectedFragment = new ProfileFragment();
-                // tag = "profile";
+                 tag = "profile";
             }
 
             if (selectedFragment != null) {
@@ -74,4 +73,10 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
 }

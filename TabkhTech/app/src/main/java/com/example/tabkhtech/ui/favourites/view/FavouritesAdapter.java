@@ -28,7 +28,7 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.search_meal_item, parent, false);
+                .inflate(R.layout.item_card, parent, false);
         return new ViewHolder(view);
     }
 
@@ -55,8 +55,8 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
         TextView title;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.mealImg);
-            title = itemView.findViewById(R.id.mealName);
+            image = itemView.findViewById(R.id.itemImg);
+            title = itemView.findViewById(R.id.itemName);
         }
     }
 }

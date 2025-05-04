@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
+import com.example.tabkhtech.model.pojos.SchedMeal;
 import com.example.tabkhtech.model.remote.MealNetworkCallback;
 import com.example.tabkhtech.model.remote.SingleMealNetworkCallback;
 import com.example.tabkhtech.model.repository.Repository;
@@ -24,26 +25,25 @@ public class SingleMealPresenterImpl implements SingleMealPresenter, SingleMealN
 
 
     @Override
-    public void addToFavorites(FavMeal meal) {
+    public void insertFavMeal(FavMeal meal) {
         repository.insertFavMeal(meal);
     }
 
     @Override
     public boolean isMealFavorite(String mealId) {
-        LiveData<FavMeal> favMealLiveData = repository.getFavMealById(mealId);
+        LiveData<FavMeal> favMealLiveData = repository.getFavMealById(mealId,"1");
         return favMealLiveData.getValue() != null;
     }
 
     @Override
-    public void removeFromFavorites(FavMeal meal) {
+    public void deleteFavMeal(FavMeal meal) {
         repository.deleteFavMeal(meal);
     }
 
     @Override
-    public LiveData<FavMeal> getFavMealById(String mealId) {
-        return repository.getFavMealById(mealId);
+    public LiveData<FavMeal> getFavMealById(String mealId, String userId) {
+        return repository.getFavMealById(mealId, userId);
     }
-
 
 
     @Override
@@ -59,5 +59,10 @@ public class SingleMealPresenterImpl implements SingleMealPresenter, SingleMealN
     @Override
     public void insertRecentMeal(RecentMeal meal) {
         new Thread(() -> repository.insertRecentMeal(meal)).start();
+    }
+
+    @Override
+    public void insertSchedMeal(SchedMeal meal) {
+        new Thread(() -> repository.insertSchedMeal(meal)).start();
     }
 }

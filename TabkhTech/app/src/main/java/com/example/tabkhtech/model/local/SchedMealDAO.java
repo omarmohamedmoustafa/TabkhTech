@@ -14,14 +14,14 @@ import java.util.List;
 @Dao
 public interface SchedMealDAO {
 
-    @Query("SELECT * FROM sched_meals")
-    LiveData<List<SchedMeal>> getScheduledMeals();
+    @Query("SELECT * FROM sched_meals WHERE scheduledDate = :date AND userId = :userId")
+    LiveData<List<SchedMeal>> getScheduledMeals(String date, String userId);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertScheduledMeal(SchedMeal meal);
 
-    @Query("SELECT * FROM sched_meals WHERE idMeal = :id")
-    LiveData<SchedMeal> getScheduledMealById(String id);
+    @Query("SELECT * FROM sched_meals WHERE idMeal = :id AND userId = :userId")
+    LiveData<SchedMeal> getScheduledMealById(String id, String userId);
 
     @Delete
     void deleteScheduledMeal(SchedMeal meal);

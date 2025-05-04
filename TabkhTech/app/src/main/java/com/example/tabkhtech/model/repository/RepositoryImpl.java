@@ -7,6 +7,7 @@ import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
 import com.example.tabkhtech.model.pojos.SchedMeal;
+import com.example.tabkhtech.model.pojos.User;
 import com.example.tabkhtech.model.remote.MealRemoteDataSource;
 import com.example.tabkhtech.model.remote.MealNetworkCallback;
 import com.example.tabkhtech.model.remote.CategoryNetworkCallback;
@@ -37,20 +38,6 @@ public class RepositoryImpl implements Repository{
         return instance;
     }
 
-    @Override
-    public LiveData<List<FavMeal>> getAllFavMeals() {
-        return localDataSource.getAllFavMeals();
-    }
-
-    @Override
-    public LiveData<List<SchedMeal>> getAllSchedMeals() {
-        return localDataSource.getAllSchedMeals();
-    }
-
-    @Override
-    public LiveData<List<RecentMeal>> getAllRecentMeals(int limit) {
-        return localDataSource.getAllRecentMeals(limit);
-    }
 
     @Override
     public void insertRecentMeal(RecentMeal meal) {
@@ -68,6 +55,21 @@ public class RepositoryImpl implements Repository{
     }
 
     @Override
+    public LiveData<List<FavMeal>> getAllFavMeals(String userId) {
+        return localDataSource.getAllFavMeals(userId);
+    }
+
+    @Override
+    public LiveData<List<SchedMeal>> getAllSchedMeals(String date, String userId) {
+        return localDataSource.getAllSchedMeals(date, userId);
+    }
+
+    @Override
+    public LiveData<List<RecentMeal>> getAllRecentMeals(String userId, int limit) {
+        return localDataSource.getAllRecentMeals(userId,limit);
+    }
+
+    @Override
     public void insertFavMeal(FavMeal meal) {
         new Thread(() -> localDataSource.insertFavMeal(meal)).start();
     }
@@ -82,20 +84,6 @@ public class RepositoryImpl implements Repository{
         new Thread(() -> localDataSource.deleteRecentMeal(meal)).start();
     }
 
-    @Override
-    public LiveData<FavMeal> getFavMealById(String id) {
-        return localDataSource.getFavMealById(id);
-    }
-
-    @Override
-    public LiveData<SchedMeal> getSchedMealById(String id) {
-        return localDataSource.getSchedMealById(id);
-    }
-
-    @Override
-    public LiveData<RecentMeal> getRecentMealById(String id) {
-        return localDataSource.getRecentMealById(id);
-    }
 
     @Override
     public void getRandomMeal(SingleMealNetworkCallback callback) {
@@ -135,6 +123,41 @@ public class RepositoryImpl implements Repository{
     @Override
     public void getAllIngredients(IngredientNetworkCallback callback) {
         remoteDataSource.getAllIngredients(callback);
+    }
+
+    @Override
+    public LiveData<FavMeal> getFavMealById(String mealId, String userId) {
+        return localDataSource.getFavMealById(mealId,userId);
+    }
+
+    @Override
+    public LiveData<SchedMeal> getSchedMealById(String mealId, String userId) {
+        return localDataSource.getSchedMealById(mealId,userId);
+    }
+
+    @Override
+    public LiveData<RecentMeal> getRecentMealById(String mealId, String userId) {
+        return localDataSource.getRecentMealById(mealId,userId);
+    }
+
+    @Override
+    public void insertUser(User user) {
+        new Thread(() -> localDataSource.insertUser(user)).start();
+    }
+
+    @Override
+    public LiveData<User> getUserById(String userId) {
+        return localDataSource.getUserById(userId);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        new Thread(() -> localDataSource.updateUser(user)).start();
+    }
+
+    @Override
+    public void deleteUser(String userId) {
+        new Thread(() -> localDataSource.deleteUser(userId)).start();
     }
 
 }

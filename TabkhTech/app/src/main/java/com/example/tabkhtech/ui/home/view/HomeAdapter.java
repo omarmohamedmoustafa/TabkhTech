@@ -29,7 +29,7 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recent_meal, parent, false);
+                .inflate(R.layout.item_card, parent, false);
         return new ViewHolder(view);
     }
 
@@ -63,8 +63,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.recent_meal_image);
-            title = itemView.findViewById(R.id.recent_meal_name);
+            image = itemView.findViewById(R.id.itemImg);
+            title = itemView.findViewById(R.id.itemName);
         }
     }
 

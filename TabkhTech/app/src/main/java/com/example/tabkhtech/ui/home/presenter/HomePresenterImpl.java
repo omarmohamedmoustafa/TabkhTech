@@ -26,17 +26,15 @@ public class HomePresenterImpl implements HomePresenter, MealNetworkCallback, Si
     @Override
     public void getRandomMeal() {
         repository.getRandomMeal(this);
-        Log.d("TAG", "getRandomMeal: ");
     }
 
     @Override
-    public LiveData<List<RecentMeal>> getRecentlyViewedMeals(int limit) {
-        return repository.getAllRecentMeals(5);
+    public LiveData<List<RecentMeal>> getAllRecentMeals(String userId, int limit) {
+        return repository.getAllRecentMeals(userId, limit);
     }
 
     @Override
     public void onSuccess(List<Meal> meals) {
-
     }
 
     @Override
@@ -49,7 +47,6 @@ public class HomePresenterImpl implements HomePresenter, MealNetworkCallback, Si
 
     @Override
     public void onFailure(String errorMessage) {
-        Log.e("RandomMealPresenter", "Error fetching random meal: " + errorMessage);
         view.showError(errorMessage);
     }
 }

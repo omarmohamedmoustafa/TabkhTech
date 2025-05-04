@@ -1,13 +1,17 @@
 package com.example.tabkhtech.ui.favourites.view;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,7 +29,6 @@ import com.example.tabkhtech.ui.single_meal.view.mealFragment;
 
 import java.util.ArrayList;
 
-
 public class FavouritesFragment extends Fragment implements OnMealClickListener, FavouritesView {
 
     private RecyclerView rv;
@@ -33,11 +36,16 @@ public class FavouritesFragment extends Fragment implements OnMealClickListener,
     private FavouritesAdapter adapter;
     private FavouritesPresenter presenter;
     private View rootView;
+    private SharedPreferences sharedPreferences;
+    private String userId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        // Initialize SharedPreferences
+        sharedPreferences = requireContext().getSharedPreferences("user_data", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getString("userId", "guest"); // Default to "guest"
         presenter = new FavouritesPresenterImpl(this,
                 RepositoryImpl.getInstance(
                         MealLocalDataSourceImpl.getInstance(requireContext()),
@@ -65,10 +73,15 @@ public class FavouritesFragment extends Fragment implements OnMealClickListener,
     }
 
     private void loadFavourites() {
-        presenter.getFavouriteMeals().observe(getViewLifecycleOwner(), meals -> {
-            if (meals != null && rv != null) {
-                adapter = new FavouritesAdapter(meals, this);
+        presenter.getAllFavMeals(userId).observe(getViewLifecycleOwner(), favMeals -> {
+            if (favMeals != null && !favMeals.isEmpty()) {
+                adapter = new FavouritesAdapter(favMeals, this);
                 rv.setAdapter(adapter);
+            } else {
+                Log.d(TAG, "No favourite meals found for user: " + userId);
+                // Optionally show a message to the user
+                rv.setVisibility(View.GONE);
+                // Consider adding a TextView in the layout to display "No favorites"
             }
         });
     }
@@ -84,8 +97,7 @@ public class FavouritesFragment extends Fragment implements OnMealClickListener,
         args.putString("area", meal.getStrArea());
         args.putString("instructions", meal.getStrInstructions());
         args.putString("youtube", meal.getStrYoutube());
-        args.putBoolean("fromFavorites", false);
-
+        args.putBoolean("fromFavorites", true); // Indicate meal is from favorites
         args.putStringArrayList("ingredients", new ArrayList<>(meal.getIngredients()));
         args.putStringArrayList("measures", new ArrayList<>(meal.getMeasures()));
 
@@ -99,19 +111,8 @@ public class FavouritesFragment extends Fragment implements OnMealClickListener,
         rootView.findViewById(R.id.favMainContentLayout).setVisibility(View.GONE);
     }
 
-    public boolean onBackPressed() {
-        if (getChildFragmentManager().getBackStackEntryCount() > 0) {
-            getChildFragmentManager().popBackStack();
-            rootView.findViewById(R.id.favFragmentContainer).setVisibility(View.GONE);
-            rootView.findViewById(R.id.favMainContentLayout).setVisibility(View.VISIBLE);
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
     }
 }

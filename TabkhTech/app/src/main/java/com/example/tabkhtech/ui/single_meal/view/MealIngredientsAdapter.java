@@ -21,7 +21,6 @@ public class MealIngredientsAdapter extends RecyclerView.Adapter<MealIngredients
     private List<String> ingredients = new ArrayList<>();
     private List<String> measures = new ArrayList<>();
 
-    // Constructor to accept ingredients and measures
     public MealIngredientsAdapter(List<String> ingredients, List<String> measures) {
         this.ingredients = ingredients;
         this.measures = measures;
@@ -42,9 +41,6 @@ public class MealIngredientsAdapter extends RecyclerView.Adapter<MealIngredients
 
         // Bind measurement
         holder.ingredientMeasure.setText(measures.get(position));
-//        *URL's match the ingredient name with an underscore for any spaces.
-//
-//        www.themealdb.com/images/ingredients/lime-small.png
         String ingredientName = ingredients.get(position).replace(" ", "_").toLowerCase();
         String imageUrl = "https://www.themealdb.com/images/ingredients/" + ingredientName + "-small.png";
 
@@ -58,7 +54,6 @@ public class MealIngredientsAdapter extends RecyclerView.Adapter<MealIngredients
 
     @Override
     public int getItemCount() {
-        // Return the size of the ingredients list (should match measures size)
         return ingredients.size();
     }
 

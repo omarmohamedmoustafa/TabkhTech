@@ -1,6 +1,8 @@
 package com.example.tabkhtech.model.pojos;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -79,7 +81,7 @@ public class Meal {
                 strIngredient16, strIngredient17, strIngredient18, strIngredient19, strIngredient20
         };
         for (String ingredient : ingredientFields) {
-            if (ingredient != null && !ingredient.trim().isEmpty()) {
+            if (ingredient != null) {
                 ingredients.add(ingredient);
             }
         }
@@ -94,33 +96,74 @@ public class Meal {
                 strMeasure16, strMeasure17, strMeasure18, strMeasure19, strMeasure20
         };
         for (String measure : measureFields) {
-            if (measure != null && !measure.trim().isEmpty()) {
+            if (measure != null) {
                 measures.add(measure);
             }
         }
         return measures;
     }
     public void setIngredients(List<String> ingredients) {
-        String[] ingredientFields = {
-                strIngredient1, strIngredient2, strIngredient3, strIngredient4, strIngredient5,
-                strIngredient6, strIngredient7, strIngredient8, strIngredient9, strIngredient10,
-                strIngredient11, strIngredient12, strIngredient13, strIngredient14, strIngredient15,
-                strIngredient16, strIngredient17, strIngredient18, strIngredient19, strIngredient20
-        };
-        for (int i = 0; i < ingredients.size() && i < ingredientFields.length; i++) {
-            ingredientFields[i] = ingredients.get(i);
-        }
+        if (ingredients == null) return;
+
+        // Clear all ingredients first
+        strIngredient1 = strIngredient2 = strIngredient3 = strIngredient4 = strIngredient5 =
+                strIngredient6 = strIngredient7 = strIngredient8 = strIngredient9 = strIngredient10 =
+                        strIngredient11 = strIngredient12 = strIngredient13 = strIngredient14 = strIngredient15 =
+                                strIngredient16 = strIngredient17 = strIngredient18 = strIngredient19 = strIngredient20 = null;
+
+        // Set each ingredient
+        if (ingredients.size() > 0) strIngredient1 = ingredients.get(0);
+        if (ingredients.size() > 1) strIngredient2 = ingredients.get(1);
+        if (ingredients.size() > 2) strIngredient3 = ingredients.get(2);
+        if (ingredients.size() > 3) strIngredient4 = ingredients.get(3);
+        if (ingredients.size() > 4) strIngredient5 = ingredients.get(4);
+        if (ingredients.size() > 5) strIngredient6 = ingredients.get(5);
+        if (ingredients.size() > 6) strIngredient7 = ingredients.get(6);
+        if (ingredients.size() > 7) strIngredient8 = ingredients.get(7);
+        if (ingredients.size() > 8) strIngredient9 = ingredients.get(8);
+        if (ingredients.size() > 9) strIngredient10 = ingredients.get(9);
+        if (ingredients.size() > 10) strIngredient11 = ingredients.get(10);
+        if (ingredients.size() > 11) strIngredient12 = ingredients.get(11);
+        if (ingredients.size() > 12) strIngredient13 = ingredients.get(12);
+        if (ingredients.size() > 13) strIngredient14 = ingredients.get(13);
+        if (ingredients.size() > 14) strIngredient15 = ingredients.get(14);
+        if (ingredients.size() > 15) strIngredient16 = ingredients.get(15);
+        if (ingredients.size() > 16) strIngredient17 = ingredients.get(16);
+        if (ingredients.size() > 17) strIngredient18 = ingredients.get(17);
+        if (ingredients.size() > 18) strIngredient19 = ingredients.get(18);
+        if (ingredients.size() > 19) strIngredient20 = ingredients.get(19);
     }
+
     public void setMeasures(List<String> measures) {
-        String[] measureFields = {
-                strMeasure1, strMeasure2, strMeasure3, strMeasure4, strMeasure5,
-                strMeasure6, strMeasure7, strMeasure8, strMeasure9, strMeasure10,
-                strMeasure11, strMeasure12, strMeasure13, strMeasure14, strMeasure15,
-                strMeasure16, strMeasure17, strMeasure18, strMeasure19, strMeasure20
-        };
-        for (int i = 0; i < measures.size() && i < measureFields.length; i++) {
-            measureFields[i] = measures.get(i);
-        }
+        if (measures == null) return;
+
+        // Clear all measures first
+        strMeasure1 = strMeasure2 = strMeasure3 = strMeasure4 = strMeasure5 =
+                strMeasure6 = strMeasure7 = strMeasure8 = strMeasure9 = strMeasure10 =
+                        strMeasure11 = strMeasure12 = strMeasure13 = strMeasure14 = strMeasure15 =
+                                strMeasure16 = strMeasure17 = strMeasure18 = strMeasure19 = strMeasure20 = null;
+
+        // Set each measure
+        if (measures.size() > 0) strMeasure1 = measures.get(0);
+        if (measures.size() > 1) strMeasure2 = measures.get(1);
+        if (measures.size() > 2) strMeasure3 = measures.get(2);
+        if (measures.size() > 3) strMeasure4 = measures.get(3);
+        if (measures.size() > 4) strMeasure5 = measures.get(4);
+        if (measures.size() > 5) strMeasure6 = measures.get(5);
+        if (measures.size() > 6) strMeasure7 = measures.get(6);
+        if (measures.size() > 7) strMeasure8 = measures.get(7);
+        if (measures.size() > 8) strMeasure9 = measures.get(8);
+        if (measures.size() > 9) strMeasure10 = measures.get(9);
+        if (measures.size() > 10) strMeasure11 = measures.get(10);
+        if (measures.size() > 11) strMeasure12 = measures.get(11);
+        if (measures.size() > 12) strMeasure13 = measures.get(12);
+        if (measures.size() > 13) strMeasure14 = measures.get(13);
+        if (measures.size() > 14) strMeasure15 = measures.get(14);
+        if (measures.size() > 15) strMeasure16 = measures.get(15);
+        if (measures.size() > 16) strMeasure17 = measures.get(16);
+        if (measures.size() > 17) strMeasure18 = measures.get(17);
+        if (measures.size() > 18) strMeasure19 = measures.get(18);
+        if (measures.size() > 19) strMeasure20 = measures.get(19);
     }
     public String getIdMeal() {
         return idMeal;

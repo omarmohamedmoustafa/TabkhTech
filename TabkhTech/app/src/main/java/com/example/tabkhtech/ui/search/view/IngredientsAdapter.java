@@ -37,7 +37,7 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view =  LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.search_item, parent, false);
+                .inflate(R.layout.item_card, parent, false);
         return new ViewHolder(view);
     }
 
@@ -70,8 +70,8 @@ public class IngredientsAdapter extends RecyclerView.Adapter<IngredientsAdapter.
         TextView title;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            image = itemView.findViewById(R.id.searchItemImg);
-            title = itemView.findViewById(R.id.searchItemTitle);
+            image = itemView.findViewById(R.id.itemImg);
+            title = itemView.findViewById(R.id.itemName);
         }
 
     }

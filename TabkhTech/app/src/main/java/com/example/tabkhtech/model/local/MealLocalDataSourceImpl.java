@@ -7,29 +7,23 @@ import androidx.lifecycle.LiveData;
 import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
 import com.example.tabkhtech.model.pojos.SchedMeal;
+import com.example.tabkhtech.model.pojos.User;
 
 import java.util.List;
 
-public class MealLocalDataSourceImpl implements MealLocalDataSource{
+public class MealLocalDataSourceImpl implements MealLocalDataSource {
     private FavMealDAO faveDAO;
     private SchedMealDAO schedDAO;
     private RecentMealDAO recentDAO;
-
-    private LiveData<List<FavMeal>> favouriteMeals;
-    private LiveData<List<RecentMeal>> recentMeals;
-    private LiveData<List<SchedMeal>> scheduledMeals;
-
-
+    private UserDAO userDAO;
     private static MealLocalDataSourceImpl instance = null;
 
     private MealLocalDataSourceImpl(Context context) {
-        MealDatabase mealDatabase = MealDatabase.getInstance(context);
+        TabkhTeckDatabase mealDatabase = TabkhTeckDatabase.getInstance(context);
         faveDAO = mealDatabase.favMealDAO();
         schedDAO = mealDatabase.schedMealDAO();
         recentDAO = mealDatabase.recentMealDAO();
-        favouriteMeals = faveDAO.getFavouriteMeals();
-        recentMeals = recentDAO.getRecentMeals(5);
-        scheduledMeals = schedDAO.getScheduledMeals();
+        userDAO = mealDatabase.userDAO();
     }
 
     public static MealLocalDataSourceImpl getInstance(Context context) {
@@ -39,20 +33,19 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource{
         return instance;
     }
 
-
     @Override
-    public LiveData<List<FavMeal>> getAllFavMeals() {
-        return faveDAO.getFavouriteMeals();
+    public LiveData<List<FavMeal>> getAllFavMeals(String userId) {
+        return faveDAO.getFavouriteMeals(userId);
     }
 
     @Override
-    public LiveData<List<SchedMeal>> getAllSchedMeals() {
-        return schedDAO.getScheduledMeals();
+    public LiveData<List<SchedMeal>> getAllSchedMeals(String date, String userId) {
+        return schedDAO.getScheduledMeals(date, userId);
     }
 
     @Override
-    public LiveData<List<RecentMeal>> getAllRecentMeals(int limit) {
-        return recentDAO.getRecentMeals(limit);
+    public LiveData<List<RecentMeal>> getAllRecentMeals(String userId, int limit) {
+        return recentDAO.getRecentMeals(userId, limit);
     }
 
     @Override
@@ -86,17 +79,37 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource{
     }
 
     @Override
-    public LiveData<FavMeal> getFavMealById(String id) {
-        return faveDAO.getFavouriteMealById(id);
+    public LiveData<FavMeal> getFavMealById(String id, String userId) {
+        return faveDAO.getFavouriteMealById(id, userId);
     }
 
     @Override
-    public LiveData<SchedMeal> getSchedMealById(String id) {
-        return schedDAO.getScheduledMealById(id);
+    public LiveData<SchedMeal> getSchedMealById(String id, String userId) {
+        return schedDAO.getScheduledMealById(id, userId);
     }
 
     @Override
-    public LiveData<RecentMeal> getRecentMealById(String id) {
-        return recentDAO.getRecentMealById(id);
+    public LiveData<RecentMeal> getRecentMealById(String id, String userId) {
+        return recentDAO.getRecentMealById(id, userId);
+    }
+
+    @Override
+    public void insertUser(User user) {
+        userDAO.insertUser(user);
+    }
+
+    @Override
+    public LiveData<User> getUserById(String userId) {
+        return userDAO.getUserById(userId);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        userDAO.updateUser(user);
+    }
+
+    @Override
+    public void deleteUser(String userId) {
+        userDAO.deleteUser(userId);
     }
 }
