@@ -6,4 +6,5 @@ public interface ProfileView {
     void showSignOutConfirmation();
     void navigateToLoginScreen();
     void showError(String message);
+    void loadUserData();
 }
