@@ -1,11 +1,10 @@
 package com.example.tabkhtech.authentication.signup.presenter;
 
-import androidx.lifecycle.LiveData;
-
-import com.example.tabkhtech.model.pojos.User;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 public interface SignUpPresenter {
-    void insertUser(User user);
-    LiveData<User> getUserById(String userId);
-    void updateUser(User user);
+    void signUpWithEmail(String name, String email, String password, String confirmPassword);
+    void signUpWithGoogle(String idToken);
+    void continueAsGuest();
+    void initiateGoogleSignUp();
 }

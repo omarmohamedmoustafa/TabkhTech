@@ -1,13 +1,12 @@
 package com.example.tabkhtech.ui.home.presenter;
 
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 
 import com.example.tabkhtech.model.pojos.RecentMeal;
-import com.example.tabkhtech.model.remote.MealNetworkCallback;
-import com.example.tabkhtech.model.remote.SingleMealNetworkCallback;
+//import com.example.tabkhtech.model.pojos.User;
+import com.example.tabkhtech.model.remote.retrofit.MealNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.SingleMealNetworkCallback;
 import com.example.tabkhtech.ui.home.view.HomeView;
 import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.repository.Repository;
@@ -24,7 +23,7 @@ public class HomePresenterImpl implements HomePresenter, MealNetworkCallback, Si
     }
 
     @Override
-    public void getRandomMeal() {
+    public void getMealOfTheDay() {
         repository.getRandomMeal(this);
     }
 
@@ -32,6 +31,7 @@ public class HomePresenterImpl implements HomePresenter, MealNetworkCallback, Si
     public LiveData<List<RecentMeal>> getAllRecentMeals(String userId, int limit) {
         return repository.getAllRecentMeals(userId, limit);
     }
+
 
     @Override
     public void onSuccess(List<Meal> meals) {

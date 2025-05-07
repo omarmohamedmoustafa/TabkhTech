@@ -5,11 +5,11 @@ import com.example.tabkhtech.model.pojos.Country;
 import com.example.tabkhtech.model.pojos.Ingredient;
 import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
-import com.example.tabkhtech.model.remote.CategoryNetworkCallback;
-import com.example.tabkhtech.model.remote.CountryNetworkCallback;
-import com.example.tabkhtech.model.remote.IngredientNetworkCallback;
-import com.example.tabkhtech.model.remote.MealNetworkCallback;
-import com.example.tabkhtech.model.remote.SingleMealNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.CategoryNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.CountryNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.IngredientNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.MealNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.SingleMealNetworkCallback;
 import com.example.tabkhtech.model.repository.Repository;
 import com.example.tabkhtech.ui.search.view.SearchViewInterface;
 

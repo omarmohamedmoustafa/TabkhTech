@@ -5,7 +5,8 @@ import androidx.lifecycle.LiveData;
 import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
 import com.example.tabkhtech.model.pojos.SchedMeal;
-import com.example.tabkhtech.model.pojos.User;
+//import com.example.tabkhtech.model.pojos.User;
+//import com.example.tabkhtech.model.pojos.User;
 
 import java.util.List;
 /*
@@ -36,8 +37,8 @@ public interface MealLocalDataSource {
     LiveData<SchedMeal> getSchedMealById(String id, String userId);
     LiveData<RecentMeal> getRecentMealById(String id, String userId);
 
-    void insertUser(User user);
-    LiveData<User> getUserById(String userId);
-    void updateUser(User user);
-    void deleteUser(String userId);
+//    void insertUser(User user);
+//    LiveData<User> getUserById(String userId);
+//    void updateUser(User user);
+//    void deleteUser(String userId);
 }

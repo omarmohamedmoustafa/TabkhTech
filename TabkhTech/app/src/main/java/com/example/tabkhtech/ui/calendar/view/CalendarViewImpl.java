@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -14,19 +15,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.example.tabkhtech.R;
 import com.example.tabkhtech.model.local.MealLocalDataSourceImpl;
 import com.example.tabkhtech.model.pojos.SchedMeal;
-import com.example.tabkhtech.model.remote.MealRemoteDataSourceImpl;
+import com.example.tabkhtech.model.remote.retrofit.MealRemoteDataSourceImpl;
 import com.example.tabkhtech.model.repository.RepositoryImpl;
 import com.example.tabkhtech.ui.calendar.presenter.CalendarPresenter;
 import com.example.tabkhtech.ui.calendar.presenter.CalendarPresenterImpl;
-import com.example.tabkhtech.ui.single_meal.view.mealFragment;
+import com.example.tabkhtech.ui.detailed_meal.view.MealFragment;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import static android.view.View.GONE;
@@ -41,6 +45,7 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
     private FrameLayout schedFragmentContainer;
     private CalendarView calendarView;
     private TextView tvEmptyState, tvMealsLabel;
+    private ImageView ivNoScheduledMeals;
     private View rootView;
     private String currentSelectedDate;
     private LinearLayoutManager layoutManager;
@@ -54,7 +59,7 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
 
         // Initialize SharedPreferences
         sharedPreferences = requireContext().getSharedPreferences("user_data", getContext().MODE_PRIVATE);
-        userId = sharedPreferences.getString("userId", "guest"); // Default to "guest"
+        userId = sharedPreferences.getString("userId", "guest");
 
         calendarPresenter = new CalendarPresenterImpl(
                 this,
@@ -80,6 +85,7 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
         calendarView = view.findViewById(R.id.calendarView);
         tvEmptyState = view.findViewById(R.id.tvEmptyState);
         tvMealsLabel = view.findViewById(R.id.tvMealsLabel);
+        ivNoScheduledMeals = view.findViewById(R.id.ivNoScheduledMeals);
         layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
@@ -93,9 +99,10 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
             tvMealsLabel.setText("Meals for " + selectedDate);
 
             calendarPresenter.getAllSchedMeals(selectedDate, userId).observe(getViewLifecycleOwner(), meals -> {
+
                 calendarAdapter = new CalendarAdapter(meals, this, this);
                 recyclerView.setAdapter(calendarAdapter);
-                tvEmptyState.setVisibility(meals.isEmpty() ? VISIBLE : GONE);
+                updateVisibility(meals);
             });
         });
 
@@ -108,13 +115,26 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
         calendarPresenter.getAllSchedMeals(todayDate, userId).observe(getViewLifecycleOwner(), meals -> {
             calendarAdapter = new CalendarAdapter(meals, this, this);
             recyclerView.setAdapter(calendarAdapter);
-            tvEmptyState.setVisibility(meals.isEmpty() ? VISIBLE : GONE);
+            updateVisibility(meals);
+            Log.d(TAG, meals.toString());
         });
+    }
+
+    private void updateVisibility(List<SchedMeal> meals) {
+        if (meals != null && !meals.isEmpty()) {
+            recyclerView.setVisibility(VISIBLE);
+            ivNoScheduledMeals.setVisibility(GONE);
+            tvEmptyState.setVisibility(GONE);
+        } else {
+            recyclerView.setVisibility(GONE);
+            ivNoScheduledMeals.setVisibility(VISIBLE);
+            tvEmptyState.setVisibility(VISIBLE);
+        }
     }
 
     @Override
     public void onMealClick(SchedMeal meal) {
-        mealFragment fragMeal = new mealFragment();
+        MealFragment fragMeal = new MealFragment();
         Bundle args = new Bundle();
         args.putString("id", meal.getIdMeal());
         args.putString("imageUrl", meal.getStrMealThumb());
@@ -126,7 +146,7 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
         args.putBoolean("fromFavorites", false);
         args.putStringArrayList("ingredients", new ArrayList<>(meal.getIngredients()));
         args.putStringArrayList("measures", new ArrayList<>(meal.getMeasures()));
-
+        Log.d("+++++++++++++++", args.toString());
         fragMeal.setArguments(args);
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.schedFragmentContainer, fragMeal)
@@ -141,7 +161,7 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
         calendarPresenter.deleteScheduledMeal(meal);
         calendarPresenter.getAllSchedMeals(currentSelectedDate, userId).observe(getViewLifecycleOwner(), meals -> {
             calendarAdapter.updateList(meals);
-            tvEmptyState.setVisibility(meals.isEmpty() ? VISIBLE : GONE);
+            updateVisibility(meals);
         });
     }
 
@@ -149,4 +169,27 @@ public class CalendarViewImpl extends Fragment implements ICalendarView, OnMealC
     public void onDestroyView() {
         super.onDestroyView();
     }
+
+//    public void handleBackPress() {
+//        FragmentContainerView schedFragmentContainer = rootView.findViewById(R.id.schedFragmentContainer);
+//        LinearLayout schedMainContentLayout = rootView.findViewById(R.id.schedMainContentLayout);
+//        if (schedFragmentContainer.getVisibility() == View.VISIBLE) {
+//            schedFragmentContainer.setVisibility(View.GONE);
+//            schedMainContentLayout.setVisibility(View.VISIBLE);
+//            getChildFragmentManager().popBackStack();
+//        } else {
+//            requireActivity().onBackPressed();
+//        }
+//    }
+public boolean handleBackPress() {
+    FragmentContainerView schedFragmentContainer = rootView.findViewById(R.id.schedFragmentContainer);
+    LinearLayout schedMainContentLayout = rootView.findViewById(R.id.schedMainContentLayout);
+    if (schedFragmentContainer.getVisibility() == View.VISIBLE) {
+        schedFragmentContainer.setVisibility(View.GONE);
+        schedMainContentLayout.setVisibility(View.VISIBLE);
+        getChildFragmentManager().popBackStack();
+        return true;
+    }
+    return false;
+}
 }

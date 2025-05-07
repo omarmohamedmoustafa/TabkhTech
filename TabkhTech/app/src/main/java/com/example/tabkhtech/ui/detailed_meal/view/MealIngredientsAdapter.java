@@ -1,4 +1,4 @@
-package com.example.tabkhtech.ui.single_meal.view;
+package com.example.tabkhtech.ui.detailed_meal.view;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.tabkhtech.R;
-import com.example.tabkhtech.model.pojos.Ingredient;
 
 import java.util.ArrayList;
 import java.util.List;

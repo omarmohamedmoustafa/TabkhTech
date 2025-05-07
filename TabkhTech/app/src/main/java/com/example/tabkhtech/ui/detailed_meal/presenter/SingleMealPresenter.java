@@ -1,4 +1,4 @@
-package com.example.tabkhtech.ui.single_meal.presenter;
+package com.example.tabkhtech.ui.detailed_meal.presenter;
 
 import androidx.lifecycle.LiveData;
 

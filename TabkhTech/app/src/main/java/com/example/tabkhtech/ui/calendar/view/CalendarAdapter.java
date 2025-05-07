@@ -43,8 +43,8 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarAdapter.ViewHo
         holder.textView.setText(meal.getStrMeal());
         Glide.with(holder.itemView.getContext())
                 .load(meal.getStrMealThumb())
-                .error(R.drawable.ic_launcher_background)
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.meal)
+                .error(R.drawable.meal)
                 .into(holder.imageView);
         holder.itemView.setOnClickListener(v -> onMealClickListener.onMealClick(meal));
         holder.deleteButton.setOnClickListener(v -> onMealDeleteListener.onMealDelete(meal));

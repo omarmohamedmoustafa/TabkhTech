@@ -41,8 +41,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Vi
         holder.title.setText(category.getStrCategory());
         Glide.with(holder.itemView.getContext())
                 .load(category.getStrCategoryThumb())
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.meal)
+                .error(R.drawable.meal)
                 .into(holder.image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

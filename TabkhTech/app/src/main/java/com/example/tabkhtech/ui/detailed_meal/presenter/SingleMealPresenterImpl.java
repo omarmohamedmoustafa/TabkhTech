@@ -1,6 +1,4 @@
-package com.example.tabkhtech.ui.single_meal.presenter;
-
-import android.util.Log;
+package com.example.tabkhtech.ui.detailed_meal.presenter;
 
 import androidx.lifecycle.LiveData;
 
@@ -8,12 +6,9 @@ import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
 import com.example.tabkhtech.model.pojos.SchedMeal;
-import com.example.tabkhtech.model.remote.MealNetworkCallback;
-import com.example.tabkhtech.model.remote.SingleMealNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.SingleMealNetworkCallback;
 import com.example.tabkhtech.model.repository.Repository;
-import com.example.tabkhtech.ui.single_meal.view.SingleMealView;
-
-import java.util.List;
+import com.example.tabkhtech.ui.detailed_meal.view.SingleMealView;
 
 public class SingleMealPresenterImpl implements SingleMealPresenter, SingleMealNetworkCallback {
     Repository repository;
@@ -58,11 +53,11 @@ public class SingleMealPresenterImpl implements SingleMealPresenter, SingleMealN
 
     @Override
     public void insertRecentMeal(RecentMeal meal) {
-        new Thread(() -> repository.insertRecentMeal(meal)).start();
+        repository.insertRecentMeal(meal);
     }
 
     @Override
     public void insertSchedMeal(SchedMeal meal) {
-        new Thread(() -> repository.insertSchedMeal(meal)).start();
+        repository.insertSchedMeal(meal);
     }
 }

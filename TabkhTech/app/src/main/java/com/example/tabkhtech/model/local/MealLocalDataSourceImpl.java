@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
 import com.example.tabkhtech.model.pojos.SchedMeal;
-import com.example.tabkhtech.model.pojos.User;
+//import com.example.tabkhtech.model.pojos.User;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
     private FavMealDAO faveDAO;
     private SchedMealDAO schedDAO;
     private RecentMealDAO recentDAO;
-    private UserDAO userDAO;
+//    private UserDAO userDAO;
     private static MealLocalDataSourceImpl instance = null;
 
     private MealLocalDataSourceImpl(Context context) {
@@ -23,7 +23,7 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
         faveDAO = mealDatabase.favMealDAO();
         schedDAO = mealDatabase.schedMealDAO();
         recentDAO = mealDatabase.recentMealDAO();
-        userDAO = mealDatabase.userDAO();
+//        userDAO = mealDatabase.userDAO();
     }
 
     public static MealLocalDataSourceImpl getInstance(Context context) {
@@ -93,23 +93,23 @@ public class MealLocalDataSourceImpl implements MealLocalDataSource {
         return recentDAO.getRecentMealById(id, userId);
     }
 
-    @Override
-    public void insertUser(User user) {
-        userDAO.insertUser(user);
-    }
-
-    @Override
-    public LiveData<User> getUserById(String userId) {
-        return userDAO.getUserById(userId);
-    }
-
-    @Override
-    public void updateUser(User user) {
-        userDAO.updateUser(user);
-    }
-
-    @Override
-    public void deleteUser(String userId) {
-        userDAO.deleteUser(userId);
-    }
+//    @Override
+//    public void insertUser(User user) {
+//        userDAO.insertUser(user);
+//    }
+//
+//    @Override
+//    public LiveData<User> getUserById(String userId) {
+//        return userDAO.getUserById(userId);
+//    }
+//
+//    @Override
+//    public void updateUser(User user) {
+//        userDAO.updateUser(user);
+//    }
+//
+//    @Override
+//    public void deleteUser(String userId) {
+//        userDAO.deleteUser(userId);
+//    }
 }

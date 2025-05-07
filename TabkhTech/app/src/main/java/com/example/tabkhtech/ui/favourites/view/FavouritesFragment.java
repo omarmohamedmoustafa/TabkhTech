@@ -1,31 +1,31 @@
 package com.example.tabkhtech.ui.favourites.view;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tabkhtech.R;
+import com.example.tabkhtech.model.pojos.FavMeal;
 import com.example.tabkhtech.ui.favourites.presenter.FavouritesPresenter;
 import com.example.tabkhtech.ui.favourites.presenter.FavouritesPresenterImpl;
 import com.example.tabkhtech.model.local.MealLocalDataSourceImpl;
-import com.example.tabkhtech.model.pojos.Meal;
-import com.example.tabkhtech.model.remote.MealRemoteDataSourceImpl;
+import com.example.tabkhtech.model.remote.retrofit.MealRemoteDataSourceImpl;
 import com.example.tabkhtech.model.repository.RepositoryImpl;
-import com.example.tabkhtech.ui.single_meal.view.mealFragment;
+import com.example.tabkhtech.ui.detailed_meal.view.MealFragment;
 
 import java.util.ArrayList;
 
@@ -73,22 +73,23 @@ public class FavouritesFragment extends Fragment implements OnMealClickListener,
     }
 
     private void loadFavourites() {
+        ImageView ivNoFavorites = rootView.findViewById(R.id.ivNoFavorites);
         presenter.getAllFavMeals(userId).observe(getViewLifecycleOwner(), favMeals -> {
             if (favMeals != null && !favMeals.isEmpty()) {
                 adapter = new FavouritesAdapter(favMeals, this);
                 rv.setAdapter(adapter);
+                rv.setVisibility(View.VISIBLE);
+                ivNoFavorites.setVisibility(View.GONE);
             } else {
-                Log.d(TAG, "No favourite meals found for user: " + userId);
-                // Optionally show a message to the user
                 rv.setVisibility(View.GONE);
-                // Consider adding a TextView in the layout to display "No favorites"
+                ivNoFavorites.setVisibility(View.VISIBLE);
             }
         });
     }
 
     @Override
-    public void onMealClick(Meal meal) {
-        mealFragment mealFrag = new mealFragment();
+    public void onMealClick(FavMeal meal) {
+        MealFragment mealFrag = new MealFragment();
         Bundle args = new Bundle();
         args.putString("id", meal.getIdMeal());
         args.putString("imageUrl", meal.getStrMealThumb());
@@ -112,7 +113,35 @@ public class FavouritesFragment extends Fragment implements OnMealClickListener,
     }
 
     @Override
+    public void onDeleteClick(FavMeal meal) {
+        presenter.deleteMeal(meal);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+//    public void handleBackPress() {
+//        FragmentContainerView favFragmentContainer = rootView.findViewById(R.id.favFragmentContainer);
+//        LinearLayout favMainContentLayout = rootView.findViewById(R.id.favMainContentLayout);
+//        if (favFragmentContainer.getVisibility() == View.VISIBLE) {
+//            favFragmentContainer.setVisibility(View.GONE);
+//            favMainContentLayout.setVisibility(View.VISIBLE);
+//            getChildFragmentManager().popBackStack();
+//        } else {
+//            requireActivity().onBackPressed();
+//        }
+//    }
+    public boolean handleBackPress() {
+        FragmentContainerView favFragmentContainer = rootView.findViewById(R.id.favFragmentContainer);
+        LinearLayout favMainContentLayout = rootView.findViewById(R.id.favMainContentLayout);
+        if (favFragmentContainer.getVisibility() == View.VISIBLE) {
+            favFragmentContainer.setVisibility(View.GONE);
+            favMainContentLayout.setVisibility(View.VISIBLE);
+            getChildFragmentManager().popBackStack();
+            return true; // Back press handled
+        }
+        return false; // Back press not handled, navigate to Home
     }
 }

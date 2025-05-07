@@ -1,4 +1,4 @@
-package com.example.tabkhtech.authentication.signup.view;
+package com.example.tabkhtech.authentication.signin.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,17 +9,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tabkhtech.MainActivity;
 import com.example.tabkhtech.R;
-import com.example.tabkhtech.authentication.signin.view.SignInActivity;
-import com.example.tabkhtech.authentication.signup.presenter.SignUpPresenter;
-import com.example.tabkhtech.authentication.signup.presenter.SignUpPresenterImpl;
-import com.example.tabkhtech.model.local.MealLocalDataSourceImpl;
+import com.example.tabkhtech.authentication.signin.presenter.SignInPresenter;
+import com.example.tabkhtech.authentication.signin.presenter.SignInPresenterImpl;
+import com.example.tabkhtech.authentication.signup.view.SignUpActivity;
 import com.example.tabkhtech.model.remote.firebase.FirebaseAuthManager;
-import com.example.tabkhtech.model.remote.retrofit.MealRemoteDataSourceImpl;
-import com.example.tabkhtech.model.repository.RepositoryImpl;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -28,41 +26,39 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class SignUpActivity extends AppCompatActivity implements SignUpView {
+public class SignInActivity extends AppCompatActivity implements SignInView {
 
-    EditText emailEditText, passwordEditText, nameEditText, confirmPasswordEditText;
-    Button signUpButton;
-    TextView loginRedirectText;
-    MaterialButton googleSignUpButton;
-    private SignUpPresenter presenter;
+    EditText loginEmail, loginPassword;
+    Button loginButton;
+    TextView signupRedirectText;
+    MaterialButton googleSignInButton, guestModeButton;
+    private SignInPresenter presenter;
     private SharedPreferences sharedPreferences;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 1001;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Check if user is already logged in
         sharedPreferences = getSharedPreferences("user_data", MODE_PRIVATE);
         boolean isSignedIn = sharedPreferences.getBoolean("isSignedIn", false);
-        boolean isGuest = sharedPreferences.getBoolean("isGuest", false);
+
         if (isSignedIn) {
             redirectToMainActivity();
             return;
         }
 
-        setContentView(R.layout.activity_sign_up);
+        setContentView(R.layout.activity_sign_in);
 
         // Initialize views
-        emailEditText = findViewById(R.id.etEmail);
-        passwordEditText = findViewById(R.id.etPassword);
-        nameEditText = findViewById(R.id.etName);
-        confirmPasswordEditText = findViewById(R.id.etConfirmPassword);
-        signUpButton = findViewById(R.id.btnSignUp);
-        loginRedirectText = findViewById(R.id.loginRedirectText);
-        googleSignUpButton = findViewById(R.id.btnGoogleSignUp);
-        Button guestButton = findViewById(R.id.btnGuest);
+        loginEmail = findViewById(R.id.loginEmail);
+        loginPassword = findViewById(R.id.loginPassword);
+        loginButton = findViewById(R.id.login_button);
+        signupRedirectText = findViewById(R.id.signupRedirectText);
+        googleSignInButton = findViewById(R.id.btnGoogleSignIn);
+        guestModeButton = findViewById(R.id.btnGuestSignIn);
 
         // Initialize FirebaseAuthManager
         FirebaseAuthManager authManager = new FirebaseAuthManager(
@@ -74,34 +70,34 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
 
         // Initialize GoogleSignInClient
         mGoogleSignInClient = authManager.getGoogleSignInClient();
+
         // Initialize presenter
-        presenter = new SignUpPresenterImpl(this, authManager, RepositoryImpl.getInstance(MealLocalDataSourceImpl.getInstance(this), MealRemoteDataSourceImpl.getInstance()));
+        presenter = new SignInPresenterImpl(this, authManager);
 
         // Set up click listeners
-        signUpButton.setOnClickListener(view -> {
-            String name = nameEditText.getText().toString();
-            String email = emailEditText.getText().toString();
-            String password = passwordEditText.getText().toString();
-            String confirmPassword = confirmPasswordEditText.getText().toString();
-            presenter.signUpWithEmail(name, email, password, confirmPassword);
+        loginButton.setOnClickListener(view -> {
+            String email = loginEmail.getText().toString().trim();
+            String password = loginPassword.getText().toString().trim();
+
+            presenter.signInWithEmail(email, password);
         });
 
-        loginRedirectText.setOnClickListener(view -> redirectToSignInActivity());
+        googleSignInButton.setOnClickListener(view -> presenter.initiateGoogleSignIn());
 
-        googleSignUpButton.setOnClickListener(view -> presenter.initiateGoogleSignUp());
+        signupRedirectText.setOnClickListener(view -> presenter.redirectToSignUpActivity());
 
-        guestButton.setOnClickListener(v -> presenter.continueAsGuest());
+        guestModeButton.setOnClickListener(view -> presenter.continueAsGuest());
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                presenter.signUpWithGoogle(account.getIdToken());
+                presenter.signInWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 Log.e("GoogleSignIn", "Sign-in failed", e);
                 showToast("Google sign-in failed: " + e.getMessage());
@@ -117,19 +113,20 @@ public class SignUpActivity extends AppCompatActivity implements SignUpView {
     @Override
     public void redirectToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
 
     @Override
-    public void redirectToSignInActivity() {
-        Intent intent = new Intent(this, SignInActivity.class);
+    public void redirectToSignUpActivity() {
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
         finish();
     }
 
     @Override
-    public void startGoogleSignUpIntent() {
+    public void startGoogleSignInIntent() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }

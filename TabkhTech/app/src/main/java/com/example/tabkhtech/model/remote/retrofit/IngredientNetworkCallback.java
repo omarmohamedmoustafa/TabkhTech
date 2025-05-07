@@ -1,4 +1,4 @@
-package com.example.tabkhtech.model.remote;
+package com.example.tabkhtech.model.remote.retrofit;
 
 import com.example.tabkhtech.model.pojos.Ingredient;
 

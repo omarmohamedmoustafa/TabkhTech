@@ -3,6 +3,7 @@ package com.example.tabkhtech.ui.favourites.view;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,13 +29,13 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_card, parent, false);
+                .inflate(R.layout.calendar_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Meal meal = meals.get(position);
+        FavMeal meal = meals.get(position);
         holder.title.setText(meal.getStrMeal());
         Glide.with(holder.itemView.getContext())
                 .load(meal.getStrMealThumb())
@@ -42,6 +43,9 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
                 .into(holder.image);
         holder.itemView.setOnClickListener(v -> {
             mealClickListener.onMealClick(meal);
+        });
+        holder.deleteButton.setOnClickListener(v -> {
+            mealClickListener.onDeleteClick(meal);
         });
     }
 
@@ -53,10 +57,12 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
         TextView title;
+        ImageButton deleteButton;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.itemImg);
             title = itemView.findViewById(R.id.itemName);
+            deleteButton = itemView.findViewById(R.id.deleteButton);
         }
     }
 }

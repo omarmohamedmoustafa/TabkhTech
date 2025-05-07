@@ -1,4 +1,4 @@
-package com.example.tabkhtech.ui.single_meal.view;
+package com.example.tabkhtech.ui.detailed_meal.view;
 
 import com.example.tabkhtech.model.pojos.Meal;
 

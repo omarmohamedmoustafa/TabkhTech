@@ -77,12 +77,12 @@ public class CountriesAdapter extends RecyclerView.Adapter<CountriesAdapter.View
 
         // Get the country code from the map, default to "US" if not found
         String countryCode = COUNTRY_TO_CODE.getOrDefault(country.getStrArea(), "US");
-        String countryFlagUrl = "https://flagsapi.com/" + countryCode + "/shiny/64.png";
+        String countryFlagUrl = "https://flagsapi.com/" + countryCode + "/flat/64.png";
 
         Glide.with(holder.itemView.getContext())
                 .load(countryFlagUrl)
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.meal)
+                .error(R.drawable.meal)
                 .into(holder.image);
 
         holder.itemView.setOnClickListener(v -> countryClickListener.onCountryClick(country));

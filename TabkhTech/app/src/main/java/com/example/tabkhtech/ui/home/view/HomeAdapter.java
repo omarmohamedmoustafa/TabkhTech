@@ -41,8 +41,8 @@ public class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.ViewHolder> {
 
         Glide.with(holder.itemView.getContext())
                 .load(imageUrl)
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
+                .placeholder(R.drawable.meal)
+                .error(R.drawable.meal)
                 .into(holder.image);
 
         holder.itemView.setOnClickListener(v -> {

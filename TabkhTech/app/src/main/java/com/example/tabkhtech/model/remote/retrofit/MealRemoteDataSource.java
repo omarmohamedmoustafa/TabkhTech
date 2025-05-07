@@ -1,4 +1,4 @@
-package com.example.tabkhtech.model.remote;
+package com.example.tabkhtech.model.remote.retrofit;
 
 public interface MealRemoteDataSource {
     void getRandomMeal(SingleMealNetworkCallback callback);

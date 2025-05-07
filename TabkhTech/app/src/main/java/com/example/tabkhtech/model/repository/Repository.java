@@ -3,15 +3,15 @@ package com.example.tabkhtech.model.repository;
 import androidx.lifecycle.LiveData;
 
 import com.example.tabkhtech.model.pojos.FavMeal;
-import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
 import com.example.tabkhtech.model.pojos.SchedMeal;
-import com.example.tabkhtech.model.pojos.User;
-import com.example.tabkhtech.model.remote.CategoryNetworkCallback;
-import com.example.tabkhtech.model.remote.CountryNetworkCallback;
-import com.example.tabkhtech.model.remote.IngredientNetworkCallback;
-import com.example.tabkhtech.model.remote.MealNetworkCallback;
-import com.example.tabkhtech.model.remote.SingleMealNetworkCallback;
+//import com.example.tabkhtech.model.pojos.User;
+//import com.example.tabkhtech.model.pojos.User;
+import com.example.tabkhtech.model.remote.retrofit.CategoryNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.CountryNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.IngredientNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.MealNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.SingleMealNetworkCallback;
 
 import java.util.List;
 
@@ -43,9 +43,9 @@ public interface Repository {
     LiveData<SchedMeal> getSchedMealById(String mealId, String userId);
     LiveData<RecentMeal> getRecentMealById(String mealId, String userId);
 
-    void insertUser(User user);
-    LiveData<User> getUserById(String userId);
-    void updateUser(User user);
-    void deleteUser(String userId);
+//    void insertUser(User user);
+//    LiveData<User> getUserById(String userId);
+//    void updateUser(User user);
+//    void deleteUser(String userId);
 
 }

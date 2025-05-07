@@ -16,9 +16,13 @@ public class FavouritesPresenterImpl implements FavouritesPresenter{
         this.view = view;
     }
 
-
     @Override
     public LiveData<List<FavMeal>> getAllFavMeals(String userId) {
         return repository.getAllFavMeals(userId);
+    }
+
+    @Override
+    public void deleteMeal(FavMeal meal) {
+        repository.deleteFavMeal(meal);
     }
 }

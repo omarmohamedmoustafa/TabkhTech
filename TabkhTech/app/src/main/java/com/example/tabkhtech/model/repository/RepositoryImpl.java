@@ -4,16 +4,16 @@ import androidx.lifecycle.LiveData;
 
 import com.example.tabkhtech.model.local.MealLocalDataSource;
 import com.example.tabkhtech.model.pojos.FavMeal;
-import com.example.tabkhtech.model.pojos.Meal;
 import com.example.tabkhtech.model.pojos.RecentMeal;
 import com.example.tabkhtech.model.pojos.SchedMeal;
-import com.example.tabkhtech.model.pojos.User;
-import com.example.tabkhtech.model.remote.MealRemoteDataSource;
-import com.example.tabkhtech.model.remote.MealNetworkCallback;
-import com.example.tabkhtech.model.remote.CategoryNetworkCallback;
-import com.example.tabkhtech.model.remote.IngredientNetworkCallback;
-import com.example.tabkhtech.model.remote.CountryNetworkCallback;
-import com.example.tabkhtech.model.remote.SingleMealNetworkCallback;
+//import com.example.tabkhtech.model.pojos.User;
+//import com.example.tabkhtech.model.pojos.User;
+import com.example.tabkhtech.model.remote.retrofit.MealRemoteDataSource;
+import com.example.tabkhtech.model.remote.retrofit.MealNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.CategoryNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.IngredientNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.CountryNetworkCallback;
+import com.example.tabkhtech.model.remote.retrofit.SingleMealNetworkCallback;
 
 
 import java.util.List;
@@ -140,25 +140,25 @@ public class RepositoryImpl implements Repository{
         return localDataSource.getRecentMealById(mealId,userId);
     }
 
-    @Override
-    public void insertUser(User user) {
-        new Thread(() -> localDataSource.insertUser(user)).start();
-    }
-
-    @Override
-    public LiveData<User> getUserById(String userId) {
-        return localDataSource.getUserById(userId);
-    }
-
-    @Override
-    public void updateUser(User user) {
-        new Thread(() -> localDataSource.updateUser(user)).start();
-    }
-
-    @Override
-    public void deleteUser(String userId) {
-        new Thread(() -> localDataSource.deleteUser(userId)).start();
-    }
+//    @Override
+//    public void insertUser(User user) {
+//        new Thread(() -> localDataSource.insertUser(user)).start();
+//    }
+//
+//    @Override
+//    public LiveData<User> getUserById(String userId) {
+//        return localDataSource.getUserById(userId);
+//    }
+//
+//    @Override
+//    public void updateUser(User user) {
+//        new Thread(() -> localDataSource.updateUser(user)).start();
+//    }
+//
+//    @Override
+//    public void deleteUser(String userId) {
+//        new Thread(() -> localDataSource.deleteUser(userId)).start();
+//    }
 
 }
 

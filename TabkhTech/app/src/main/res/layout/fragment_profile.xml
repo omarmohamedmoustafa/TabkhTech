@@ -40,7 +40,7 @@
                         android:src="@drawable/ic_profile_placeholder"
                         android:scaleType="centerCrop"
                         android:background="@drawable/circle_background"
-                        app:cardElevation="2dp" />
+                       />
 
                 </RelativeLayout>
 
@@ -76,80 +76,80 @@
             app:cardElevation="4dp"
             app:cardBackgroundColor="#FFF1F0">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:padding="20dp">-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Meal Planning Stats"
-                    android:textColor="#D32F2F"
-                    android:textSize="20sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Meal Planning Stats"-->
+<!--                    android:textColor="#D32F2F"-->
+<!--                    android:textSize="20sp"-->
+<!--                    android:fontFamily="sans-serif-medium"-->
+<!--                    android:textStyle="bold" />-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="12dp">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="horizontal"-->
+<!--                    android:layout_marginTop="12dp">-->
 
-                    <!-- Stat 1 -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+<!--                    &lt;!&ndash; Stat 1 &ndash;&gt;-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:gravity="center">-->
 
-                        <TextView
-                            android:id="@+id/mealsPlanned"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#212121"
-                            android:textSize="24sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/mealsPlanned"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:textColor="#212121"-->
+<!--                            android:textSize="24sp"-->
+<!--                            android:fontFamily="sans-serif-medium"-->
+<!--                            android:textStyle="bold" />-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Meals Planned"
-                            android:textColor="#757575"
-                            android:textSize="14sp"
-                            android:fontFamily="sans-serif" />
-                    </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Meals Planned"-->
+<!--                            android:textColor="#757575"-->
+<!--                            android:textSize="14sp"-->
+<!--                            android:fontFamily="sans-serif" />-->
+<!--                    </LinearLayout>-->
 
-                    <!-- Stat 2 -->
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+<!--                    &lt;!&ndash; Stat 2 &ndash;&gt;-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:orientation="vertical"-->
+<!--                        android:gravity="center">-->
 
-                        <TextView
-                            android:id="@+id/recipesSaved"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="#212121"
-                            android:textSize="24sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/recipesSaved"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:textColor="#212121"-->
+<!--                            android:textSize="24sp"-->
+<!--                            android:fontFamily="sans-serif-medium"-->
+<!--                            android:textStyle="bold" />-->
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Recipes Saved"
-                            android:textColor="#757575"
-                            android:textSize="14sp"
-                            android:fontFamily="sans-serif" />
-                    </LinearLayout>
-                </LinearLayout>
-            </LinearLayout>
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Recipes Saved"-->
+<!--                            android:textColor="#757575"-->
+<!--                            android:textSize="14sp"-->
+<!--                            android:fontFamily="sans-serif" />-->
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
+<!--            </LinearLayout>-->
         </androidx.cardview.widget.CardView>
 
         <!-- Account Settings Section -->

@@ -16,7 +16,6 @@ public class CalendarPresenterImpl implements CalendarPresenter{
         this.repository = repository;
     }
 
-
     @Override
     public LiveData<List<SchedMeal>> getAllSchedMeals(String date, String userId) {
         return repository.getAllSchedMeals(date, userId);

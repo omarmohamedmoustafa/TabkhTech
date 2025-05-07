@@ -12,13 +12,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentContainerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,12 +29,11 @@ import com.example.tabkhtech.model.pojos.Category;
 import com.example.tabkhtech.model.pojos.Country;
 import com.example.tabkhtech.model.pojos.Ingredient;
 import com.example.tabkhtech.model.pojos.Meal;
-import com.example.tabkhtech.model.pojos.RecentMeal;
-import com.example.tabkhtech.model.remote.MealRemoteDataSourceImpl;
+import com.example.tabkhtech.model.remote.retrofit.MealRemoteDataSourceImpl;
 import com.example.tabkhtech.model.repository.RepositoryImpl;
 import com.example.tabkhtech.ui.search.presenter.SearchPresenter;
 import com.example.tabkhtech.ui.search.presenter.SearchPresenterImpl;
-import com.example.tabkhtech.ui.single_meal.view.mealFragment;
+import com.example.tabkhtech.ui.detailed_meal.view.MealFragment;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -43,7 +43,6 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
         OnIngredientClickListener, OnCategoryClickListener, OnCountryClickListener, OnMealClickListener {
 
     private SearchPresenter presenter;
-    private mealFragment mealFrag;
     private MaterialButton searchByCategory, searchByCountry, searchByIngredient;
     private RecyclerView rv;
     private LinearLayoutManager layoutManager;
@@ -56,7 +55,6 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
     private ConnectivityManager connectivityManager;
     private boolean isConnected;
     private ConnectivityManager.NetworkCallback networkCallback;
-
 
     private String currentSearchType = "categories";
     private String previousSearchType = "categories";
@@ -88,13 +86,13 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
             return networkInfo != null && networkInfo.isConnected();
         }
     }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Initialize connectivity manager
         connectivityManager = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         isConnected = isInternetConnected(getContext());
-        if(isConnected){
+        if (isConnected) {
             presenter = new SearchPresenterImpl(this,
                     RepositoryImpl.getInstance(
                             MealLocalDataSourceImpl.getInstance(requireContext()),
@@ -107,17 +105,14 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (isConnected)
-            rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        else
-            rootView = inflater.inflate(R.layout.disconnected, container, false);
+        rootView = inflater.inflate(isConnected ? R.layout.fragment_search : R.layout.disconnected, container, false);
         return rootView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(isConnected) {
+        if (isConnected) {
             searchByCategory = rootView.findViewById(R.id.btnCategories);
             searchByCountry = rootView.findViewById(R.id.btnCountries);
             searchByIngredient = rootView.findViewById(R.id.btnIngredients);
@@ -325,10 +320,7 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
 
     @Override
     public void showMealDetails(Meal meal) {
-
-        addRecentMeal(meal);
-
-        mealFrag = new mealFragment();
+        MealFragment mealFrag = new MealFragment();
         Bundle args = new Bundle();
         args.putString("id", meal.getIdMeal());
         args.putString("imageUrl", meal.getStrMealThumb());
@@ -342,24 +334,17 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
         args.putStringArrayList("measures", new ArrayList<>(meal.getMeasures()));
         mealFrag.setArguments(args);
 
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, mealFrag);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fragmentContainerView, mealFrag)
+                .addToBackStack("meal_detail")
+                .commit();
 
-        View fragmentContainer = getActivity().findViewById(R.id.frame_layout);
-        View mainContent = rootView.findViewById(R.id.mainContentLayout);
+        FragmentContainerView fragmentContainer = rootView.findViewById(R.id.fragmentContainerView);
+        LinearLayout mainContent = rootView.findViewById(R.id.mainContentLayout);
         if (fragmentContainer != null && mainContent != null) {
             fragmentContainer.setVisibility(View.VISIBLE);
             mainContent.setVisibility(View.GONE);
         }
-    }
-
-    public void addRecentMeal(Meal meal) {
-        long currentTime = System.currentTimeMillis();
-        RecentMeal recentMeal = new RecentMeal(meal, "1");
-        recentMeal.setLastOpened(currentTime);
-        presenter.insertRecentMeal(recentMeal);
     }
 
     @Override
@@ -388,13 +373,13 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
     }
 
     public boolean handleBackPress() {
-        View fragmentContainer = getActivity().findViewById(R.id.frame_layout);
-        View mainContent = rootView.findViewById(R.id.mainContentLayout);
-        if (fragmentContainer != null && mainContent != null && fragmentContainer.getVisibility() == View.VISIBLE) {
-            getParentFragmentManager().popBackStack();
+        FragmentContainerView fragmentContainer = rootView.findViewById(R.id.fragmentContainerView);
+        LinearLayout mainContent = rootView.findViewById(R.id.mainContentLayout);
+        if (fragmentContainer != null && fragmentContainer.getVisibility() == View.VISIBLE) {
             fragmentContainer.setVisibility(View.GONE);
             mainContent.setVisibility(View.VISIBLE);
-            return true;
+            getChildFragmentManager().popBackStack();
+            return true; // Back press handled
         } else if (currentSearchType.equals("meals")) {
             currentSearchType = previousSearchType;
             if (currentSearchType.equals("categories")) {
@@ -407,10 +392,11 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
                 setActiveButton(searchByIngredient);
                 presenter.getAllIngredients();
             }
-            return true;
+            return true; // Back press handled
         }
-        return false;
+        return false; // Back press not handled, navigate to Home
     }
+
     private void setupNetworkCallback() {
         networkCallback = new ConnectivityManager.NetworkCallback() {
             @Override
@@ -439,6 +425,7 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
                 .build();
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback);
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -446,6 +433,7 @@ public class SearchViewImpl extends Fragment implements SearchViewInterface,
             connectivityManager.unregisterNetworkCallback(networkCallback);
         }
     }
+
     private void reloadFragment() {
         if (isAdded() && getActivity() != null) {
             getParentFragmentManager().beginTransaction()
